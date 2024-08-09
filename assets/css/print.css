@@ -1,0 +1,14 @@
+body {
+  margin-top: 0mm;
+  margin-bottom: 0mm;
+  margin-left: 0mm;
+  margin-right: 0mm;
+}
+
+.flex-container {
+  width: 100%;
+}
+
+.w3-tab-bar{
+  display:none;
+}

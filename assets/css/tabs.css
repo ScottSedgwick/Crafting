@@ -1,0 +1,56 @@
+.w3-tab-bar{
+    width:100%;
+    overflow:hidden;
+    display:inline-block;
+    width:auto;
+}
+
+.w3-tab-bar .w3-tab-bar-item{
+    padding:8px 16px;
+    float:left;
+    width:auto;
+    border:none;
+    display:block;
+    outline:0;
+}
+
+.w3-block{
+    display:block;
+    width:100%;
+}
+
+.w3-button{
+    border:none;
+    display:inline-block;
+    padding:8px 16px;
+    vertical-align:middle;
+    overflow:hidden;
+    text-decoration:none;
+    color:inherit;
+    background-color:inherit;
+    text-align:center;
+    cursor:pointer;
+    white-space:nowrap;
+    -webkit-touch-callout:none;
+    -webkit-user-select:none;
+    -khtml-user-select:none;
+    -moz-user-select:none;
+    -ms-user-select:none;
+    user-select:none;
+}
+.w3-tab-bar .w3-button{
+    white-space:normal;
+}
+.w3-button:disabled{
+    cursor:not-allowed;
+    opacity:0.3;
+}
+.w3-button:hover{
+    color:#000!important;
+    background-color:#ccc!important;
+}
+
+.w3-highlight-tab{
+    color:#fff!important;
+    background-color:#884d48!important
+}

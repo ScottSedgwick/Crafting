@@ -1,0 +1,144 @@
+html {
+  font-family: sans-serif; /* 1 */
+  -ms-text-size-adjust: 100%; /* 2 */
+  -webkit-text-size-adjust: 100%; /* 2 */
+}
+  
+body {
+  margin: 0;
+}
+
+.flex-container {
+  display: flex;
+  background-color: #f1f1f1;
+  flex-direction: row;
+  margin: auto;
+  width: 80%;
+  font-size: 0;
+}
+
+.flex-container > div {
+  background-color: #f1f1f1;
+  margin: 10px;
+  padding: 20px;
+  width: 50%;
+}
+
+div.input-row {
+  width: 100%;
+  margin-bottom: 25px;
+}
+
+div.input-row > label {
+  font-size: 14px;
+  font-weight: bold;
+  float: left;
+  width: 45%;
+}
+
+.checkbox {
+  width: 20px;
+  float: right;
+}
+
+div.input-row > input, div.input-row > select {
+  float: right;
+  width: calc(55% - 20px);
+}
+
+.label-info {
+  font-style: italic;
+  font-size: 12px;
+  width: 100%;
+  padding-bottom: 0px;
+  margin-bottom: 0px;
+}
+
+.label-total {
+  font-style: italic;
+  font-weight: bold;
+  font-size: 12px;
+  padding-top: 20px;
+}
+
+.section-header {
+  font-size: 20px;
+  font-weight: bold;
+  padding-bottom: 0px;
+  margin-bottom: 0px;
+  font-variant-caps: small-caps;
+}
+
+.section-subscript {
+  font-size: 12px;
+  font-style: italic;
+  padding-top: 0px;
+  margin-top: 0px;
+}
+
+.assistant-section {
+  padding-top: 0px;
+  margin-top: 0px;
+  padding-bottom: 0px;
+  margin-bottom: 0px;
+  padding: 0px;
+}
+
+.tab-button {
+  font-size: 16px;
+  font-variant-caps: small-caps;
+}
+
+.padded {
+  margin-bottom: 10px;
+}
+
+input.checkbox {
+  float:left;
+}
+
+table.cost-table {
+  width: 100%;
+}
+
+th.cost-table {
+  width: 33%;
+}
+
+td.cost-table {
+  width: 33%;
+  text-align: center;
+}
+
+.borderless {
+  border: 0;
+  margin: 0;
+  padding: 0;
+}
+
+.label {
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.info {
+  font-size: 12px;
+  font-style: italic;
+}
+
+input {
+  width: 100%;
+}
+
+select {
+  width: 100%;
+}
+
+table {
+  width: 100%;
+  font-size: 12px;
+}
+
+td {
+  width: 50%;
+}
