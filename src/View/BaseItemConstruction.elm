@@ -218,7 +218,7 @@ sectionTime model =
     tci = stt + toFloat cat + toFloat cin
     bip = (compose baseItemConstruction baseItemPrice).get model
     tww = toFloat bip / tci
-    th = tww * toFloat wwh
+    th = totalHours (baseItemConstruction.get model)
   in
     table []
       [ tr []
@@ -277,15 +277,13 @@ sectionCost : Model -> Html Msg
 sectionCost model =
   let
     bic = baseItemConstruction.get model
-    bmc = baseMaterialCost bic
-    cact = List.sum (List.map (\l -> assistantTotalCost bic ((compose baseItemConstruction l).get model)) [ assistant1, assistant2, assistant3, assistant4, assistant5 ] )
+    cact = craftingAssistantCostTotal bic
     lacac = compose baseItemConstruction additionalCraftingAssistanceCost
     slacac = toStrLens intStrConv lacac
-    acac = lacac.get model
     lmac = compose baseItemConstruction miscAdditionalCost
     slmac = toStrLens intStrConv lmac
-    mac = lmac.get model
-    total = bmc + cact + toFloat acac + toFloat mac
+    totalWW = totalWorkWeeks bic
+    totalCs = totalCosts bic
   in
     div [] 
     [ sectionHeader "Calculating Cost:" ""
@@ -330,11 +328,11 @@ sectionCost model =
         ]
       ]
     , tr []
-        [ td [] [ span [ class "label" ] [ text ("Total Work Weeks: " ++ Round.round 2 total ++ " gp") ]]
+        [ td [] [ span [ class "label" ] [ text ("Total Work Time: " ++ Round.round 2 totalWW ++ " weeks") ]]
         , td [] [ span [ class "info" ] [ text "(Divide Total Hours by 56)" ] ]
         ]
     , tr []
-        [ td [] [ span [ class "label" ] [ text ("Total Costs: " ++ Round.round 2 total ++ " gp") ]]
+        [ td [] [ span [ class "label" ] [ text ("Total Costs: " ++ Round.round 2 totalCs ++ " gp") ]]
         , td [] [ span [ class "info" ] [ text "(Add Base Materials Costs, Crafting Assistance Cost Total, Additional Crafting Assistance Cost, and Miscellaneous Additional Cost.)" ] ]
         ]
     ]

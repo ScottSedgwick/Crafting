@@ -45,6 +45,40 @@ assistantTotalCost model t =
   in 
     tc
 
+craftingAssistantCostTotal : BaseItemConstruction -> Float
+craftingAssistantCostTotal model = 
+  List.sum (List.map (\l -> assistantTotalCost model (l.get model)) [ assistant1, assistant2, assistant3, assistant4, assistant5 ] )
+
+-- Divide Total Hours by 56
+totalWorkWeeks : BaseItemConstruction -> Float
+totalWorkWeeks model = totalHours model / 56
+
+totalHours : BaseItemConstruction -> Float
+totalHours model =
+  let
+    cet = environmentTotal model
+    wwh = cet + 56
+    cin = crafterInput (crafterTypeL.get model)
+    cat = assistanceTotal model
+    stt = toolTotal model
+    tci = stt + toFloat cat + toFloat cin
+    bip = baseItemPrice.get model
+    tww = toFloat bip / tci
+  in
+    tww * toFloat wwh
+
+-- Add Base Materials Costs, Crafting Assistance Cost Total, Additional Crafting Assistance Cost, and Miscellaneous Additional Cost.
+totalCosts : BaseItemConstruction -> Float
+totalCosts model =
+  let
+    bmc = baseMaterialCost model
+    cact = craftingAssistantCostTotal model
+    acac = additionalCraftingAssistanceCost.get model
+    mac = miscAdditionalCost.get model
+  in
+    bmc + cact + toFloat acac + toFloat mac
+    
+
 toolInput : BaseItemConstruction -> Lens BaseItemConstruction Tool -> Float
 toolInput model lens =
   let
