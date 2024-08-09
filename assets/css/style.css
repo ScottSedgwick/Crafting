@@ -64,6 +64,7 @@ div.input-row > input, div.input-row > select {
 .section-header {
   font-size: 20px;
   font-weight: bold;
+  color: #884d48;
   padding-bottom: 0px;
   margin-bottom: 0px;
   font-variant-caps: small-caps;
@@ -141,4 +142,15 @@ table {
 
 td {
   width: 50%;
+}
+
+tr.shaded:nth-child(even)
+{
+  background: rgb(160, 177, 166);
+}
+
+.col-header {
+  font-size: 14px;
+  font-weight: bold;
+  padding-top: 10px;
 }

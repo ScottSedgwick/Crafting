@@ -8,6 +8,11 @@ toInt s = case (String.toInt s) of
             Just x  -> x
             Nothing -> 0
 
+strToFloat : String -> Float
+strToFloat s = case (String.toFloat s) of
+            Just x  -> x
+            Nothing -> 0
+
 type alias StrConv a =
   { toStr : a -> String
   , all : List a
@@ -32,6 +37,14 @@ intStrConv =
   { toStr = String.fromInt
   , fromStr = toInt
   , def = 0
+  , all = []
+  }
+
+floatStrConv : StrConv Float
+floatStrConv =
+  { toStr = String.fromFloat
+  , fromStr = strToFloat
+  , def = 0.0
   , all = []
   }
 
