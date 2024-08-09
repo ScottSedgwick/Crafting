@@ -286,7 +286,8 @@ sectionCost model =
     totalCs = totalCosts bic
   in
     div [] 
-    [ sectionHeader "Calculating Cost:" ""
+    [ hr [] []
+    , sectionHeader "Calculating Cost:" ""
     , table []
       [ tr []
         [ td [] [ span [ class "label" ] [ text "Crafting Assistance Costs" ]]
@@ -327,14 +328,18 @@ sectionCost model =
         , td [] [ input [ type_ "text", placeholder "Miscellaneous Additional Cost", value (slmac.get model), onInput (UpdateStr slmac) ] [] ]
         ]
       ]
-    , tr []
-        [ td [] [ span [ class "label" ] [ text ("Total Work Time: " ++ Round.round 2 totalWW ++ " weeks") ]]
-        , td [] [ span [ class "info" ] [ text "(Divide Total Hours by 56)" ] ]
-        ]
-    , tr []
-        [ td [] [ span [ class "label" ] [ text ("Total Costs: " ++ Round.round 2 totalCs ++ " gp") ]]
-        , td [] [ span [ class "info" ] [ text "(Add Base Materials Costs, Crafting Assistance Cost Total, Additional Crafting Assistance Cost, and Miscellaneous Additional Cost.)" ] ]
-        ]
+    , hr [] []
+    , table []
+      [ tr [] [ td [ colspan 2] [ span [ class "section-header" ] [ text "Totals" ]] ]
+      , tr []
+          [ td [] [ span [ class "label" ] [ text ("Total Work Time: " ++ Round.round 2 totalWW ++ " weeks") ]]
+          , td [] [ span [ class "info" ] [ text "(Divide Total Hours by 56)" ] ]
+          ]
+      , tr []
+          [ td [] [ span [ class "label" ] [ text ("Total Costs: " ++ Round.round 2 totalCs ++ " gp") ]]
+          , td [] [ span [ class "info" ] [ text "(Add Base Materials Costs, Crafting Assistance Cost Total, Additional Crafting Assistance Cost, and Miscellaneous Additional Cost.)" ] ]
+          ]
+      ]
     ]
 
 assistantCost : Model -> String -> Lens BaseItemConstruction AssistantType -> Html Msg
