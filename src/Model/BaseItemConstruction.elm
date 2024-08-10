@@ -1,28 +1,8 @@
 module Model.BaseItemConstruction exposing (..)
 
+import Model.Shared exposing (..)
 import Monocle.Lens exposing (..)
 import Utils exposing (..)
-
-type CrafterType = CrafterTypePlayerCharacter
-                 | CrafterTypeArtificer
-                 | CrafterTypeArtificerSpecialist
-
-crafterType : StrConv CrafterType
-crafterType =
-  let
-    to c =
-      case c of
-        CrafterTypePlayerCharacter     -> "Player Character/Non-Artificer"
-        CrafterTypeArtificer           -> "Artificer (non-speciality)"
-        CrafterTypeArtificerSpecialist -> "Artificer (speciality)"
-    all = [ CrafterTypePlayerCharacter, CrafterTypeArtificer, CrafterTypeArtificerSpecialist ]
-    def = CrafterTypePlayerCharacter
-  in
-    { toStr = to
-    , def = def
-    , all = all
-    , fromStr = defFromStr to all def
-    }
 
 type CraftingEnvironment = CraftingEnvironmentVeryCrude
                          | CraftingEnvironmentCrude
@@ -81,57 +61,6 @@ sanctification =
     , all = all
     , fromStr = defFromStr to all def
     }
-
-type AssistantType = AssistantTypeNone
-                   | AssistantTypeNotProficient
-                   | AssistantTypeHalfProficient
-                   | AssistantTypeProficient
-                   | AssistantTypePlayerCharacter
-                   | AssistantTypeExpertise
-                   | AssistantTypeArtificer
-                   | AssistantTypeArtificerSpecialist
-
-assistantType : StrConv AssistantType
-assistantType =
-  let
-    to t =
-      case t of
-        AssistantTypeNone                 -> "None"
-        AssistantTypeNotProficient        -> "Not Proficient"
-        AssistantTypeHalfProficient       -> "Half Proficient"
-        AssistantTypeProficient           -> "Proficient"
-        AssistantTypePlayerCharacter      -> "Player Character"
-        AssistantTypeExpertise            -> "Expertise"
-        AssistantTypeArtificer            -> "Artificer (non-specialist)"
-        AssistantTypeArtificerSpecialist  -> "Artificer (specialist)"
-    all = [ AssistantTypeNone
-          , AssistantTypeNotProficient
-          , AssistantTypeHalfProficient
-          , AssistantTypeProficient
-          , AssistantTypePlayerCharacter
-          , AssistantTypeExpertise
-          , AssistantTypeArtificer
-          , AssistantTypeArtificerSpecialist
-          ]
-    def = AssistantTypeNone
-  in
-    { toStr = to
-    , def = def
-    , all = all
-    , fromStr = defFromStr to all def
-    }
-
-assistantInput : AssistantType -> Int
-assistantInput a = 
-  case a of
-    AssistantTypeNone                 -> 0
-    AssistantTypeNotProficient        -> 5
-    AssistantTypeHalfProficient       -> 7
-    AssistantTypeProficient           -> 15
-    AssistantTypePlayerCharacter      -> 25
-    AssistantTypeExpertise            -> 30
-    AssistantTypeArtificer            -> 50
-    AssistantTypeArtificerSpecialist  -> 100
 
 type ToolType = ToolTypeNone
               | ToolTypeSubstandard

@@ -1,7 +1,6 @@
 module Model.BaseItemImprovement exposing (..)
 
 import Utils exposing (..)
-import Dict exposing (Dict)
 
 type alias BaseItemImprovement =
   { itemCategory_ : ItemCategory

@@ -2,6 +2,7 @@ module Model.BaseItemConstruction.Lenses exposing (..)
 
 import Monocle.Lens exposing (..)
 import Model.BaseItemConstruction exposing (..)
+import Model.Shared exposing (..)
 import Utils exposing (..)
 
 baseItemPrice : Lens BaseItemConstruction Int

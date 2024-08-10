@@ -45,6 +45,16 @@ checkbox ident caption model lens =
   , input [ id ident, class "checkbox", type_ "checkbox", onCheck (UpdateBool lens), checked (lens.get model) ] []
   ]
 
+check : Model -> Lens Model Bool -> Html Msg
+check model lens = input [ class "checkbox", type_ "checkbox", onCheck (UpdateBool lens), checked (lens.get model) ] []
+
+mkInput : Model -> StrConv b -> Lens Model b -> Html Msg
+mkInput model strConv lens = 
+  let
+    slens = toStrLens strConv lens
+  in
+    input [ type_ "text", placeholder "Current Item Value", value (slens.get model), onInput (UpdateStr slens) ] []
+
 sectionHeader : String -> String -> Html Msg
 sectionHeader title subscript =
   div [] 

@@ -2,6 +2,7 @@ module Model.BaseItemConstruction.Calculations exposing (..)
 
 import Model.BaseItemConstruction exposing (..)
 import Model.BaseItemConstruction.Lenses exposing (..)
+import Model.Shared exposing (..)
 import Monocle.Lens exposing (..)
 
 baseMaterialCost : BaseItemConstruction -> Float
@@ -103,10 +104,3 @@ toolInput model lens =
 
 toolTotal : BaseItemConstruction -> Float
 toolTotal model = List.sum (List.map (toolInput model) [tool1, tool2, tool3, tool4, tool5])
-
-crafterInput : CrafterType -> Int
-crafterInput c =
-  if c == CrafterTypePlayerCharacter then 25
-  else if c == CrafterTypeArtificer  then 50
-  else if c == CrafterTypeArtificerSpecialist then 100
-  else 0

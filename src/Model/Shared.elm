@@ -1,5 +1,7 @@
 module Model.Shared exposing (..)
 
+import Utils exposing (..)
+
 type TabName = TabNameBaseItemConstruction
              | TabNameBaseItemImprovement
              | TabNameItemEnchantment
@@ -53,3 +55,82 @@ tabIndex t = case t of
                 TabNameNewItemResearch        -> 6
                 TabNameSentientItems          -> 7
                 TabNameArtifacts              -> 8
+
+type CrafterType = CrafterTypePlayerCharacter
+                 | CrafterTypeArtificer
+                 | CrafterTypeArtificerSpecialist
+
+crafterType : StrConv CrafterType
+crafterType =
+  let
+    to c =
+      case c of
+        CrafterTypePlayerCharacter     -> "Player Character/Non-Artificer"
+        CrafterTypeArtificer           -> "Artificer (non-speciality)"
+        CrafterTypeArtificerSpecialist -> "Artificer (speciality)"
+    all = [ CrafterTypePlayerCharacter, CrafterTypeArtificer, CrafterTypeArtificerSpecialist ]
+    def = CrafterTypePlayerCharacter
+  in
+    { toStr = to
+    , def = def
+    , all = all
+    , fromStr = defFromStr to all def
+    }
+
+crafterInput : CrafterType -> Int
+crafterInput c =
+  if c == CrafterTypePlayerCharacter then 25
+  else if c == CrafterTypeArtificer  then 50
+  else if c == CrafterTypeArtificerSpecialist then 100
+  else 0
+
+type AssistantType = AssistantTypeNone
+                   | AssistantTypeNotProficient
+                   | AssistantTypeHalfProficient
+                   | AssistantTypeProficient
+                   | AssistantTypePlayerCharacter
+                   | AssistantTypeExpertise
+                   | AssistantTypeArtificer
+                   | AssistantTypeArtificerSpecialist
+
+assistantType : StrConv AssistantType
+assistantType =
+  let
+    to t =
+      case t of
+        AssistantTypeNone                 -> "None"
+        AssistantTypeNotProficient        -> "Not Proficient"
+        AssistantTypeHalfProficient       -> "Half Proficient"
+        AssistantTypeProficient           -> "Proficient"
+        AssistantTypePlayerCharacter      -> "Player Character"
+        AssistantTypeExpertise            -> "Expertise"
+        AssistantTypeArtificer            -> "Artificer (non-specialist)"
+        AssistantTypeArtificerSpecialist  -> "Artificer (specialist)"
+    all = [ AssistantTypeNone
+          , AssistantTypeNotProficient
+          , AssistantTypeHalfProficient
+          , AssistantTypeProficient
+          , AssistantTypePlayerCharacter
+          , AssistantTypeExpertise
+          , AssistantTypeArtificer
+          , AssistantTypeArtificerSpecialist
+          ]
+    def = AssistantTypeNone
+  in
+    { toStr = to
+    , def = def
+    , all = all
+    , fromStr = defFromStr to all def
+    }
+
+assistantInput : AssistantType -> Int
+assistantInput a = 
+  case a of
+    AssistantTypeNone                 -> 0
+    AssistantTypeNotProficient        -> 5
+    AssistantTypeHalfProficient       -> 7
+    AssistantTypeProficient           -> 15
+    AssistantTypePlayerCharacter      -> 25
+    AssistantTypeExpertise            -> 30
+    AssistantTypeArtificer            -> 50
+    AssistantTypeArtificerSpecialist  -> 100
