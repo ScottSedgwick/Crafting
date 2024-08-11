@@ -7,6 +7,7 @@ import Model.BaseItemImprovement exposing (..)
 import Model.ItemEnchantment exposing (..)
 import Model.Shared exposing (..)
 import Monocle.Lens exposing (..)
+import Model.ItemBonusImprovement exposing (..)
 
 type Msg = ChangeTab TabName
          | UpdateStr (Lens Model String) String
@@ -17,14 +18,19 @@ type alias Model =
   , baseItemConstruction_ : BaseItemConstruction 
   , baseItemImprovement_ : BaseItemImprovement
   , itemEnchantment_ : ItemEnchantment
+  , itemBonusImprovement_ : ItemBonusImprovement
   }
 
 initModel : Model
 initModel = 
-  { currentTab_ = TabNameItemEnchantment
-  , baseItemConstruction_ = initBaseItemConstruction
+  { baseItemConstruction_ = initBaseItemConstruction
   , baseItemImprovement_ = initBaseItemImprovement
   , itemEnchantment_ = initItemEnchantment
+  , itemBonusImprovement_ = initItemBonusImprovement
+  -- , currentTab_ = TabNameBaseItemConstruction
+  -- , currentTab_ = TabNameBaseItemImprovement
+  -- , currentTab_ = TabNameItemEnchantment
+  , currentTab_ = TabNameItemBonusImprovement
   }
 
 currentTab : Lens Model TabName
@@ -38,6 +44,9 @@ baseItemImprovementL = Lens .baseItemImprovement_ (\x a -> { a | baseItemImprove
 
 itemEnchantmentL : Lens Model ItemEnchantment
 itemEnchantmentL = Lens .itemEnchantment_ (\x a -> { a | itemEnchantment_ = x } )
+
+itemBonusImprovementL : Lens Model ItemBonusImprovement
+itemBonusImprovementL = Lens .itemBonusImprovement_ (\x a -> { a | itemBonusImprovement_ = x } )
 
 mCrafterInput : Model -> Int
 mCrafterInput model = crafterInput ((compose baseItemConstruction Model.BaseItemConstruction.Lenses.crafterTypeL).get model)

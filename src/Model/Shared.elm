@@ -134,3 +134,29 @@ assistantInput a =
     AssistantTypeExpertise            -> 30
     AssistantTypeArtificer            -> 50
     AssistantTypeArtificerSpecialist  -> 100
+
+type ItemRarity 
+  = ItemRarityCommon
+  | ItemRarityUncommon
+  | ItemRarityRare
+  | ItemRarityVeryRare
+  | ItemRarityLegendary
+
+itemRarity : StrConv ItemRarity
+itemRarity =
+  let
+    to e =
+      case e of
+        ItemRarityCommon    -> "Common"
+        ItemRarityUncommon  -> "Uncommon"
+        ItemRarityRare      -> "Rare"
+        ItemRarityVeryRare  -> "Very Rare"
+        ItemRarityLegendary -> "Legendary"
+    all = [ ItemRarityCommon, ItemRarityUncommon, ItemRarityRare, ItemRarityVeryRare, ItemRarityLegendary ]
+    def = ItemRarityCommon
+  in
+    { toStr = to
+    , def = def
+    , all = all
+    , fromStr = defFromStr to all def
+    }
