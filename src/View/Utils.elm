@@ -6,6 +6,7 @@ import Html.Events exposing (..)
 import Monocle.Lens exposing (..)
 
 import Model exposing (..)
+import StrConv exposing (..)
 import Utils exposing (..)
 
 rowInput : String -> String -> (Lens Model String) -> Model -> Html Msg

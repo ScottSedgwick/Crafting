@@ -8,6 +8,7 @@ import Model.ItemEnchantment exposing (..)
 import Model.Shared exposing (..)
 import Monocle.Lens exposing (..)
 import Round
+import StrConv exposing (..)
 import Utils exposing (..)
 import View.Utils exposing (..)
 
@@ -24,11 +25,11 @@ view model =
 leftPane : Model -> Html Msg
 leftPane model =
   let 
-    irl = compose itemEnchantmentL itemRarityL
-    ct  = compose itemEnchantmentL crafterTypeL
-    mas = compose itemEnchantmentL mimicASpellL
-    nos = compose itemEnchantmentL numberOfDifferentSpellsL
-    rmi = compose itemEnchantmentL replicateMagicItemL
+    irl = compose modelitemEnchantmentL itemEnchantmentitemRarityL
+    ct  = compose modelitemEnchantmentL itemEnchantmentcrafterTypeL
+    mas = compose modelitemEnchantmentL itemEnchantmentmimicASpellL
+    nos = compose modelitemEnchantmentL itemEnchantmentnumberOfDifferentSpellsL
+    rmi = compose modelitemEnchantmentL itemEnchantmentreplicateMagicItemL
   in
     div []
       [ div [ class "section-header" ] [ text "Item Enchantment" ]
@@ -39,15 +40,15 @@ leftPane model =
           ]
         , tr [] 
           [ td [] [ span [ class "label" ] [ text "Base Enchantment Cost (gp):" ] ]
-          , td [] [ span [ class "label" ] [ text (Round.round 2 (baseEnchantmentCost (itemEnchantmentL.get model))) ] ] 
+          , td [] [ span [ class "label" ] [ text (Round.round 2 (baseEnchantmentCost (modelitemEnchantmentL.get model))) ] ] 
           ]
         , tr [] 
           [ td [] [ span [ class "label" ] [ text "Base Enchantment Time (weeks):" ] ]
-          , td [] [ span [ class "label" ] [ text (Round.round 2 (baseEnchantmentTimeWeeks (itemEnchantmentL.get model))) ] ] 
+          , td [] [ span [ class "label" ] [ text (Round.round 2 (baseEnchantmentTimeWeeks (modelitemEnchantmentL.get model))) ] ] 
           ]
         , tr [] 
           [ td [] [ span [ class "label" ] [ text "Base Enchantment Time (hours):" ] ]
-          , td [] [ span [ class "label" ] [ text (Round.round 2 (baseEnchantmentTimeHours (itemEnchantmentL.get model))) ] ] 
+          , td [] [ span [ class "label" ] [ text (Round.round 2 (baseEnchantmentTimeHours (modelitemEnchantmentL.get model))) ] ] 
           ]
         , tr [] 
           [ td [] 
@@ -56,20 +57,20 @@ leftPane model =
             ]
           , td [] [ mkSelect model crafterType ct ] 
           ]
-        , assistant model "1" (compose itemEnchantmentL assistant1L)
-        , assistant model "2" (compose itemEnchantmentL assistant2L)
-        , assistant model "3" (compose itemEnchantmentL assistant3L)
-        , assistant model "4" (compose itemEnchantmentL assistant4L)
-        , assistant model "5" (compose itemEnchantmentL assistant5L)
+        , assistant model "1" (compose modelitemEnchantmentL itemEnchantmentassistant1L)
+        , assistant model "2" (compose modelitemEnchantmentL itemEnchantmentassistant2L)
+        , assistant model "3" (compose modelitemEnchantmentL itemEnchantmentassistant3L)
+        , assistant model "4" (compose modelitemEnchantmentL itemEnchantmentassistant4L)
+        , assistant model "5" (compose modelitemEnchantmentL itemEnchantmentassistant5L)
         , tr [] 
           [ td [] [ span [ class "label" ] [ text "Enchanting Assistance Total (gp):" ] ]
-          , td [] [ span [ class "label" ] [ text (String.fromInt (assistanceTotal model.itemEnchantment_)) ] ] 
+          , td [] [ span [ class "label" ] [ text (String.fromInt (assistanceTotal model.itemEnchantment)) ] ] 
           ]
         , tr [] [ td [ class "info", colspan 2 ] [ text "(Add all Enchanting Assistance Input together)" ] ]
 
         , tr [] 
           [ td [] [ span [ class "label" ] [ text "Total Crafter Input (gp):" ] ]
-          , td [] [ span [ class "label" ] [ text (String.fromInt (totalCrafterInput model.itemEnchantment_)) ] ] 
+          , td [] [ span [ class "label" ] [ text (String.fromInt (totalCrafterInput model.itemEnchantment)) ] ] 
           ]
         , tr [] [ td [ class "info", colspan 2 ] [ text "(Add Crafter Input to Additional Enchanting Assistance Total)" ] ]
         ]
@@ -79,18 +80,18 @@ leftPane model =
       , table [] 
         [ tr [] 
           [ td [ class "label" ] [ text "1. Does the Crafter have the Magic Item Adept ability?" ]
-          , td [] [ check model (compose itemEnchantmentL magicItemAdeptL) ]
+          , td [] [ check model (compose modelitemEnchantmentL itemEnchantmentmagicItemAdeptL) ]
           ]
 
         , tr [] 
           [ td [ class "label" ] [ text "2. Does the item being enchanted have a rarity of either Common or Uncommon?" ]
-          , td [ class "label" ] [ text (if commonOrUncommon model.itemEnchantment_ then "Yes" else "No") ]
+          , td [ class "label" ] [ text (if commonOrUncommon model.itemEnchantment then "Yes" else "No") ]
           ]
         , tr [] [ td [ class "info", colspan 2 ] [ text "(If the answer is yes to both Questions 1 & 2, divide the Base Enchantment Cost by 2 and the Base Enchantment Time by 4. Use these totals for the rest of the worksheet before applying any other modifiers)" ] ]
 
         , tr [] 
           [ td [ class "label" ] [ text "3. Is the item being created a scroll, potion or one-use item?" ]
-          , td [] [ check model (compose itemEnchantmentL oneUseItemL) ]
+          , td [] [ check model (compose modelitemEnchantmentL itemEnchantmentoneUseItemL) ]
           ]
         , tr [] [ td [ class "info", colspan 2 ] [ text "(If the answer is yes to both Questions 3, divide the Base Enchantment Cost and Base Enchantment Time by 2)" ] ]
 
@@ -106,7 +107,7 @@ leftPane model =
 
         , tr [] 
           [ td [ class "label" ] [ text "8. Does the crafter have access to a magic item identical to the item being crafted?" ]
-          , td [] [ check model (compose itemEnchantmentL accessToIdenticalItemL) ]
+          , td [] [ check model (compose modelitemEnchantmentL itemEnchantmentaccessToIdenticalItemL) ]
           ]
         , tr [] [ td [ class "info", colspan 2 ] [ text "If the answer is yes to Question 8, reduce the Base Enchantment Cost by 10%." ] ]
 
@@ -138,24 +139,24 @@ rightPane model =
   [ div [ class "section-header" ] [ text "Calculating Time" ]
   , table []
     ( List.concat 
-      [ mkComponent model "1" (compose itemEnchantmentL component1L)
-      , mkComponent model "2" (compose itemEnchantmentL component2L)
-      , mkComponent model "3" (compose itemEnchantmentL component3L)
-      , mkComponent model "4" (compose itemEnchantmentL component4L)
-      , mkComponent model "5" (compose itemEnchantmentL component5L)
+      [ mkComponent model "1" (compose modelitemEnchantmentL itemEnchantmentcomponent1L)
+      , mkComponent model "2" (compose modelitemEnchantmentL itemEnchantmentcomponent2L)
+      , mkComponent model "3" (compose modelitemEnchantmentL itemEnchantmentcomponent3L)
+      , mkComponent model "4" (compose modelitemEnchantmentL itemEnchantmentcomponent4L)
+      , mkComponent model "5" (compose modelitemEnchantmentL itemEnchantmentcomponent5L)
       , [ tr []
           [ td [ class "label" ] [ text ("Magic Component Total (hours):")]
-          , td [ class "label" ] [ text (Round.round 2 (magicComponentTotal model.itemEnchantment_))]
+          , td [ class "label" ] [ text (Round.round 2 (magicComponentTotal model.itemEnchantment))]
           ]
         , tr [] [ td [ class "info", colspan 2 ] [ text "(Sum of all Magical Components after multiplying by the component modifier)"]]
         , tr []
           [ td [ class "label" ] [ text ("Total Enchantment Time (weeks):")]
-          , td [ class "label" ] [ text (Round.round 2 (totalEnchantmentTimeWeeks model.itemEnchantment_))]
+          , td [ class "label" ] [ text (Round.round 2 (totalEnchantmentTimeWeeks model.itemEnchantment))]
           ]
         , tr [] [ td [ class "info", colspan 2 ] [ text "(Divide the Base Enchantment Cost by the Total Crafter Input, and then subtract the Magical Component Total from that result.)"]]
         , tr []
           [ td [ class "label" ] [ text ("Total Enchantment Time (hours):")]
-          , td [ class "label" ] [ text (Round.round 2 (totalEnchantmentTimeWeeks model.itemEnchantment_ * 56))]
+          , td [ class "label" ] [ text (Round.round 2 (totalEnchantmentTimeWeeks model.itemEnchantment * 56))]
           ]
         , tr [] [ td [ class "info", colspan 2 ] [ text "(Multiply the Total Enchantment Time (§) by the hours of a standard workweek, which is often 56.)"]]
         ]
@@ -171,20 +172,20 @@ rightPane model =
       , th [] [ text "Cost (gp per §)" ]
       , th [] [ text "Total (gp)" ]
       ]
-    , mkAssistantCost model "1" (compose itemEnchantmentL assistant1L)
-    , mkAssistantCost model "2" (compose itemEnchantmentL assistant2L)
-    , mkAssistantCost model "3" (compose itemEnchantmentL assistant3L)
-    , mkAssistantCost model "4" (compose itemEnchantmentL assistant4L)
-    , mkAssistantCost model "5" (compose itemEnchantmentL assistant5L)
-    , tr [] [ td [colspan 2, class "label"] [ text ("Additional Enchanting Assistance Total (gp): " ++ Round.round 2 (assistantCostTotal model.itemEnchantment_)) ]]
+    , mkAssistantCost model "1" (compose modelitemEnchantmentL itemEnchantmentassistant1L)
+    , mkAssistantCost model "2" (compose modelitemEnchantmentL itemEnchantmentassistant2L)
+    , mkAssistantCost model "3" (compose modelitemEnchantmentL itemEnchantmentassistant3L)
+    , mkAssistantCost model "4" (compose modelitemEnchantmentL itemEnchantmentassistant4L)
+    , mkAssistantCost model "5" (compose modelitemEnchantmentL itemEnchantmentassistant5L)
+    , tr [] [ td [colspan 2, class "label"] [ text ("Additional Enchanting Assistance Total (gp): " ++ Round.round 2 (assistantCostTotal model.itemEnchantment)) ]]
     , tr [] 
       [ td [ class "label" ] [ text "Additional Enchantment Cost (gp):"]
-      , td [] [ mkInput model intStrConv (compose itemEnchantmentL additionalCostL) ]
+      , td [] [ mkInput model intStrConv (compose modelitemEnchantmentL itemEnchantmentadditionalCostL) ]
       ]
     , tr [] [ td [ colspan 2, class "info" ] [ text "(Determined by the DM.)"]]
     , tr [] 
       [ td [ class "label" ] [ text "Total Enchantment Cost (gp):"]
-      , td [ class "label"] [ text (Round.round 2 (totalEnchantmentCost model.itemEnchantment_)) ]
+      , td [ class "label"] [ text (Round.round 2 (totalEnchantmentCost model.itemEnchantment)) ]
       ]
     , tr [] [ td [ colspan 2, class "info" ] [ text "(Sum of the Base Enchantment Cost, Additional Enchanting Assistance Total, and Additional Enchantment Cost.)"]]
     ]
@@ -194,8 +195,8 @@ rightPane model =
 mkComponent : Model -> String -> Lens Model MagicComponent -> List (Html Msg)
 mkComponent model num lens = 
   let
-    rl = compose lens componentTypeL
-    al = compose lens componentAlignmentL
+    rl = compose lens magicComponentcomponentTypeL
+    al = compose lens magicComponentalignmentL
   in
     [ tr []
       [ td [ class "label" ] [ text ("Component " ++ num ++ " rarity:")]
@@ -217,5 +218,5 @@ mkAssistantCost model num lens =
   tr [] 
   [ td [ style "width" "33%", align "center" ] [ text num ]
   , td [ style "width" "33%", align "center" ] [ text (String.fromInt cph) ]
-  , td [ style "width" "33%", align "center" ] [ text (Round.round 2 (assistantCost (lens.get model) (totalEnchantmentTimeWeeks model.itemEnchantment_))) ]
+  , td [ style "width" "33%", align "center" ] [ text (Round.round 2 (assistantCost (lens.get model) (totalEnchantmentTimeWeeks model.itemEnchantment))) ]
   ]

@@ -24,15 +24,15 @@ view model =
 leftPane : Model -> Html Msg
 leftPane model =
   let
-    sirL = compose itemBonusImprovementL currentRarityL
-    crfL = compose itemBonusImprovementL crafterTypeL
+    sirL = compose modelitemBonusImprovementL itemBonusImprovementcurrentRarityL
+    crfL = compose modelitemBonusImprovementL itemBonusImprovementcrafterTypeL
     finalR = finalRarity (sirL.get model)
     baseEC = baseEnchantmentCost finalR
     baseET = baseEnchantmentTimeWeeks finalR
     cip = crafterImprovementPercentage (crfL.get model)
-    tic = totalImprovementCost (itemBonusImprovementL.get model)
-    titw = totalImprovementTimeWeeks (itemBonusImprovementL.get model)
-    tith = totalImprovementTimeHours (itemBonusImprovementL.get model)
+    tic = totalImprovementCost (modelitemBonusImprovementL.get model)
+    titw = totalImprovementTimeWeeks (modelitemBonusImprovementL.get model)
+    tith = totalImprovementTimeHours (modelitemBonusImprovementL.get model)
   in
     div []
       [ div [ class "section-header" ] [ text "Item Bonus Improvement" ] 

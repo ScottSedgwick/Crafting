@@ -6,9 +6,9 @@ import Html.Events exposing (..)
 import Model exposing (..)
 import Model.Shared exposing (..)
 import Model.BaseItemImprovement exposing (..)
-import Model.BaseItemImprovement.Lenses exposing (..)
 import Monocle.Lens exposing (..)
 import Round
+import StrConv exposing (..)
 import Utils exposing (..)
 import View.Utils exposing (..)
 
@@ -60,10 +60,10 @@ rightPane model =
 craftingSection : Model -> Html Msg
 craftingSection model =
   let
-    lic = compose baseItemImprovementL itemCategoryL
-    lcv = compose baseItemImprovementL currentValueL
+    lic = compose modelbaseItemImprovementL baseItemImprovementitemCategoryL
+    lcv = compose modelbaseItemImprovementL baseItemImprovementcurrentValueL
     scv = toStrLens intStrConv lcv
-    lcs = compose baseItemImprovementL currentStatusL
+    lcs = compose modelbaseItemImprovementL baseItemImprovementcurrentStatusL
   in 
     table [] 
     [ tr [] 
@@ -87,7 +87,7 @@ craftingSection model =
 valueSection : Model -> Html Msg
 valueSection model =
   let
-    lcv = compose baseItemImprovementL craftingRollL
+    lcv = compose modelbaseItemImprovementL baseItemImprovementcraftingRollL
     scv = toStrLens intStrConv lcv
   in
     table []
@@ -105,7 +105,7 @@ valueSection model =
         , br [] []
         , span [ class "info" ] [ text "(Divide the Crafting Roll by Crafting Threshold, rounding down. Maximum answer of 5.)" ]
         ]
-      , td [] [ span [ class "label" ] [ text (String.fromInt (craftingResult (baseItemImprovementL.get model))) ] ]
+      , td [] [ span [ class "label" ] [ text (String.fromInt (craftingResult (modelbaseItemImprovementL.get model))) ] ]
       ]
     , tr []
       [ td [] 
@@ -113,7 +113,7 @@ valueSection model =
         , br [] []
         , span [ class "info" ] [ text "(Multiply the Current Item Value by the Crafting Result.)" ]
         ]
-      , td [] [ span [ class "label" ] [ text (String.fromInt (newItemValue (baseItemImprovementL.get model))) ] ]
+      , td [] [ span [ class "label" ] [ text (String.fromInt (newItemValue (modelbaseItemImprovementL.get model))) ] ]
       ]
     ]
 
@@ -121,7 +121,7 @@ valueSection model =
 timeSection : Model -> Html Msg
 timeSection model =
   let
-    sct = toStrLens floatStrConv (compose baseItemImprovementL standardCraftingTimeL)
+    sct = toStrLens floatStrConv (compose modelbaseItemImprovementL baseItemImprovementstandardCraftingTimeL)
   in
     table [] 
     [ tr []
@@ -138,6 +138,6 @@ timeSection model =
         , br [] []
         , span [ class "info" ] [ text "(Multiply Standard Crafting Time by Crafting Result.)" ]
         ]
-      , td [] [ span [ class "label" ] [ text (Round.round 2 (timeToCompletion (baseItemImprovementL.get model))) ] ]
+      , td [] [ span [ class "label" ] [ text (Round.round 2 (timeToCompletion (modelbaseItemImprovementL.get model))) ] ]
       ]
     ]

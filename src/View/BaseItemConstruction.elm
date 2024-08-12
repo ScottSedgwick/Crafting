@@ -5,11 +5,10 @@ import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Model exposing (..)
 import Model.BaseItemConstruction exposing (..)
-import Model.BaseItemConstruction.Calculations exposing (..)
-import Model.BaseItemConstruction.Lenses exposing (..)
 import Model.Shared exposing (..)
 import Monocle.Lens exposing (..)
 import Round
+import StrConv exposing (..)
 import Utils exposing (..)
 import View.Utils exposing (..)
 
@@ -35,7 +34,7 @@ view model =
 sectionBaseItemPrice : Model -> Html Msg
 sectionBaseItemPrice model =
   let
-    itemPrice = compose baseItemConstruction baseItemPriceStr
+    itemPrice = compose modelbaseItemConstructionL baseItemConstructionbaseItemPriceStrL
     header = sectionHeader "Base Item Construction" ""
   in
     div []
@@ -49,7 +48,7 @@ sectionBaseItemPrice model =
         , td [] [ input [ style "width" "100%", type_ "text", placeholder "Base Item Price", value (itemPrice.get model), onInput (UpdateStr itemPrice) ] [] ]
         ]
       , tr [] 
-        [ td [ colspan 2 ] [ span [ class "info" ] [ text ("Base Materials Cost (Base Item Price * 0.15): " ++ String.fromFloat (baseMaterialCost (baseItemConstruction.get model)) ++ " gp") ] ]
+        [ td [ colspan 2 ] [ span [ class "info" ] [ text ("Base Materials Cost (Base Item Price * 0.15): " ++ String.fromFloat (baseMaterialCost (modelbaseItemConstructionL.get model)) ++ " gp") ] ]
         ]
       ]
     ]
@@ -60,7 +59,7 @@ sectionBaseItemPrice model =
 sectionCrafterType : Model -> Html Msg
 sectionCrafterType model =
   let
-    l = compose baseItemConstruction crafterTypeL
+    l = compose modelbaseItemConstructionL baseItemConstructioncrafterTypeL
     ls = toStrLens crafterType l
     mkOpt a = option [ value (crafterType.toStr a), selected (l.get model == a) ] [ text (crafterType.toStr a) ]
   in
@@ -88,19 +87,19 @@ sectionCraftingAssistance model =
   [ hr [] [] 
   , sectionHeader "Crafting Assistance:" "(Fill in the Crafting Input for each Assistant)"
   , table [ style "width" "100%" ]
-    [ sectionAssistant model "1" assistant1
-    , sectionAssistant model "2" assistant2
-    , sectionAssistant model "3" assistant3
-    , sectionAssistant model "4" assistant4
-    , sectionAssistant model "5" assistant5
+    [ sectionAssistant model "1" baseItemConstructionassistant1L
+    , sectionAssistant model "2" baseItemConstructionassistant2L
+    , sectionAssistant model "3" baseItemConstructionassistant3L
+    , sectionAssistant model "4" baseItemConstructionassistant4L
+    , sectionAssistant model "5" baseItemConstructionassistant5L
     ]
-  , div [ class "label-total" ] [ text ("Crafting Assistance Total: " ++ String.fromInt (assistanceTotal (baseItemConstruction.get model)) ++ " gp") ]
+  , div [ class "label-total" ] [ text ("Crafting Assistance Total: " ++ String.fromInt (assistanceTotal (modelbaseItemConstructionL.get model)) ++ " gp") ]
   ]
 
 sectionAssistant : Model -> String -> Lens BaseItemConstruction AssistantType -> Html Msg
 sectionAssistant model num lens =
   let
-    l = compose baseItemConstruction lens
+    l = compose modelbaseItemConstructionL lens
     val = assistantInput (l.get model)
   in
     tr []
@@ -120,24 +119,24 @@ sectionTools : Model -> Html Msg
 sectionTools model =
   let
     cin = mCrafterInput model
-    cat = assistanceTotal (baseItemConstruction.get model)
-    stt = toolTotal (baseItemConstruction.get model)
+    cat = assistanceTotal (modelbaseItemConstructionL.get model)
+    stt = toolTotal (modelbaseItemConstructionL.get model)
     tci = stt + toFloat cat + toFloat cin
   in
     div [ class "borderless" ]
     [ hr [] []
     , sectionHeader "Special Tools:" "(Fill in the additional crafting input for each tool)"
     , table []
-      [ rowToolInput model "1" tool1
-      , rowToolSantification model "1" tool1
-      , rowToolInput model "2" tool2
-      , rowToolSantification model "2" tool2
-      , rowToolInput model "3" tool3
-      , rowToolSantification model "3" tool3
-      , rowToolInput model "4" tool4
-      , rowToolSantification model "4" tool4
-      , rowToolInput model "5" tool5
-      , rowToolSantification model "5" tool5
+      [ rowToolInput model "1" baseItemConstructiontool1L
+      , rowToolSantification model "1" baseItemConstructiontool1L
+      , rowToolInput model "2" baseItemConstructiontool2L
+      , rowToolSantification model "2" baseItemConstructiontool2L
+      , rowToolInput model "3" baseItemConstructiontool3L
+      , rowToolSantification model "3" baseItemConstructiontool3L
+      , rowToolInput model "4" baseItemConstructiontool4L
+      , rowToolSantification model "4" baseItemConstructiontool4L
+      , rowToolInput model "5" baseItemConstructiontool5L
+      , rowToolSantification model "5" baseItemConstructiontool5L
       , tr []
         [ td [ class "label-total" ] [ text ("Special Tools Total: " ++ String.fromFloat stt ++ " gp") ] 
         , td [ class "label-total" ] [ text ("Total Crafter Input: " ++ String.fromFloat tci ++ " gp") ]
@@ -148,9 +147,9 @@ sectionTools model =
 rowToolInput : Model -> String -> Lens BaseItemConstruction Tool -> Html Msg
 rowToolInput model num lens = 
   let
-    l = compose baseItemConstruction lens
-    lt = compose l toolTypeL
-    lm = compose l magicalL
+    l = compose modelbaseItemConstructionL lens
+    lt = compose l tooltoolTypeL
+    lm = compose l toolmagicalL
   in
     tr []
     [ td [] 
@@ -164,8 +163,8 @@ rowToolInput model num lens =
 rowToolSantification : Model -> String -> Lens BaseItemConstruction Tool -> Html Msg
 rowToolSantification model num lens = 
   let
-    l = compose (compose baseItemConstruction lens) sanctificationL
-    val = toolInput (baseItemConstruction.get model) lens
+    l = compose (compose modelbaseItemConstructionL lens) toolsanctificationL
+    val = toolInput (modelbaseItemConstructionL.get model) lens
   in
     tr []
     [ td []
@@ -183,7 +182,7 @@ rowToolSantification model num lens =
 sectionEnvironment : Model -> Html Msg
 sectionEnvironment model =
   let
-    lens = compose baseItemConstruction craftingEnvironmentL
+    lens = compose modelbaseItemConstructionL baseItemConstructioncraftingEnvironmentL
     val = craftingEnvironmentModifier (lens.get model)
   in
     div [] 
@@ -207,25 +206,25 @@ sectionEnvironment model =
 sectionTime : Model -> Html Msg
 sectionTime model =
   let
-    leat = compose baseItemConstruction environmentAttuned
-    lesc = compose baseItemConstruction environmentSanctification
-    lacr = toStrLens intStrConv (compose baseItemConstruction additionalCostReduction)
-    cet = environmentTotal (baseItemConstruction.get model)
+    leat = compose modelbaseItemConstructionL baseItemConstructionenvironmentAttunedL
+    lesc = compose modelbaseItemConstructionL baseItemConstructionenvironmentSanctificationL
+    lacr = toStrLens intStrConv (compose modelbaseItemConstructionL baseItemConstructionadditionalCostReductionL)
+    cet = environmentTotal (modelbaseItemConstructionL.get model)
     wwh = cet + 56
     cin = mCrafterInput model
-    cat = assistanceTotal (baseItemConstruction.get model)
-    stt = toolTotal (baseItemConstruction.get model)
+    cat = assistanceTotal (modelbaseItemConstructionL.get model)
+    stt = toolTotal (modelbaseItemConstructionL.get model)
     tci = stt + toFloat cat + toFloat cin
-    bip = (compose baseItemConstruction baseItemPrice).get model
+    bip = (compose modelbaseItemConstructionL baseItemConstructionbaseItemPriceL).get model
     tww = toFloat bip / tci
-    th = totalHours (baseItemConstruction.get model)
+    th = totalHours (modelbaseItemConstructionL.get model)
   in
     table []
       [ tr []
         [ td [] 
           [ span [ class "label" ] [ text "Specially Attuned (yes/no)" ]
           , br [] []
-          , span [ class "info" ] [ text ("Attunement: " ++ String.fromInt (envAttunementMod (baseItemConstruction.get model)) ++ " to base § hours") ]
+          , span [ class "info" ] [ text ("Attunement: " ++ String.fromInt (envAttunementMod (modelbaseItemConstructionL.get model)) ++ " to base § hours") ]
           ]
         , td [] [ input [ type_ "checkbox", onCheck (UpdateBool leat), checked (leat.get model) ] [] ]
         ]
@@ -234,7 +233,7 @@ sectionTime model =
         [ td []
           [ span [ class "label" ] [ text "Sanctified (choose one):" ]
           , br [] []
-          , span [ class "info" ] [ text ("Sanctification: " ++ String.fromInt (envSanctificationMod (baseItemConstruction.get model)) ++ " to base § hours") ]
+          , span [ class "info" ] [ text ("Sanctification: " ++ String.fromInt (envSanctificationMod (modelbaseItemConstructionL.get model)) ++ " to base § hours") ]
           ]
         , td [] [ mkSelect model sanctification lesc ]
         ]
@@ -276,11 +275,11 @@ sectionTime model =
 sectionCost : Model -> Html Msg
 sectionCost model =
   let
-    bic = baseItemConstruction.get model
+    bic = modelbaseItemConstructionL.get model
     cact = craftingAssistantCostTotal bic
-    lacac = compose baseItemConstruction additionalCraftingAssistanceCost
+    lacac = compose modelbaseItemConstructionL baseItemConstructionadditionalCraftingAssistanceCostL
     slacac = toStrLens intStrConv lacac
-    lmac = compose baseItemConstruction miscAdditionalCost
+    lmac = compose modelbaseItemConstructionL baseItemConstructionmiscAdditionalCostL
     slmac = toStrLens intStrConv lmac
     totalWW = totalWorkWeeks bic
     totalCs = totalCosts bic
@@ -300,11 +299,11 @@ sectionCost model =
         , th [ class "cost-table" ] [ text "Cost (gp per §)" ]
         , th [ class "cost-table" ] [ text "Total Cost (gp)" ]
         ]
-      , assistantCost model "1" assistant1
-      , assistantCost model "2" assistant2
-      , assistantCost model "3" assistant3
-      , assistantCost model "4" assistant4
-      , assistantCost model "5" assistant5
+      , assistantCost model "1" baseItemConstructionassistant1L
+      , assistantCost model "2" baseItemConstructionassistant2L
+      , assistantCost model "3" baseItemConstructionassistant3L
+      , assistantCost model "4" baseItemConstructionassistant4L
+      , assistantCost model "5" baseItemConstructionassistant5L
       ]
     , table []
       [ tr []
@@ -345,9 +344,9 @@ sectionCost model =
 assistantCost : Model -> String -> Lens BaseItemConstruction AssistantType -> Html Msg
 assistantCost model num lens =
   let
-    t = (compose baseItemConstruction lens).get model
+    t = (compose modelbaseItemConstructionL lens).get model
     c = assistantInput t
-    tc = assistantTotalCost (baseItemConstruction.get model) t
+    tc = assistantTotalCost (modelbaseItemConstructionL.get model) t
   in
     tr [] 
     [ td [ class "cost-table" ] [ text num ]

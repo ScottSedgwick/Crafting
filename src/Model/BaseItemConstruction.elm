@@ -1,35 +1,8 @@
 module Model.BaseItemConstruction exposing (..)
 
-import Model.Shared exposing (..)
+import Model exposing (..)
 import Monocle.Lens exposing (..)
-import Utils exposing (..)
-
-type CraftingEnvironment = CraftingEnvironmentVeryCrude
-                         | CraftingEnvironmentCrude
-                         | CraftingEnvironmentBasic
-                         | CraftingEnvironmentAdvanced
-                         | CraftingEnvironmentExpert
-                         | CraftingEnvironmentApex
-
-craftingEnvironment : StrConv CraftingEnvironment
-craftingEnvironment =
-  let
-    to e =
-      case e of
-        CraftingEnvironmentVeryCrude  -> "Very Crude"
-        CraftingEnvironmentCrude      -> "Crude"
-        CraftingEnvironmentBasic      -> "Basic"
-        CraftingEnvironmentAdvanced   -> "Advanced"
-        CraftingEnvironmentExpert     -> "Expert"
-        CraftingEnvironmentApex       -> "Apex"
-    all = [ CraftingEnvironmentVeryCrude, CraftingEnvironmentCrude, CraftingEnvironmentBasic, CraftingEnvironmentAdvanced, CraftingEnvironmentExpert, CraftingEnvironmentApex ]
-    def = CraftingEnvironmentBasic
-  in
-    { toStr = to
-    , def = def
-    , all = all
-    , fromStr = defFromStr to all def
-    }
+import Model.Shared exposing (..)
 
 craftingEnvironmentModifier : CraftingEnvironment -> Int
 craftingEnvironmentModifier e =
@@ -41,122 +14,106 @@ craftingEnvironmentModifier e =
     CraftingEnvironmentExpert     -> -15
     CraftingEnvironmentApex       -> -20
 
-type Sanctification = SanctificationNone
-                    | SanctificationBasic
-                    | SanctificationThemed
 
-sanctification : StrConv Sanctification
-sanctification =
+mCrafterInput : Model -> Int
+mCrafterInput model = crafterInput ((compose modelbaseItemConstructionL baseItemConstructioncrafterTypeL).get model)
+
+baseMaterialCost : BaseItemConstruction -> Float
+baseMaterialCost model = toFloat (baseItemConstructionbaseItemPriceL.get model) * 0.15
+
+envAttunementMod : BaseItemConstruction -> Int
+envAttunementMod model = if (baseItemConstructionenvironmentAttunedL.get model) then -5 else 0
+
+envSanctificationMod : BaseItemConstruction -> Int
+envSanctificationMod model = 
+  case (baseItemConstructionenvironmentSanctificationL.get model) of
+    SanctificationNone    -> 0
+    SanctificationBasic   -> -5
+    SanctificationThemed  -> -15
+
+environmentTotal : BaseItemConstruction -> Int
+environmentTotal model = 
   let
-    to s =
-      case s of
-        SanctificationNone    -> "None"
-        SanctificationBasic   -> "Basic"
-        SanctificationThemed  -> "Themed"
-    all = [ SanctificationNone, SanctificationBasic, SanctificationThemed ]
-    def = SanctificationNone
+    cenv = craftingEnvironmentModifier (baseItemConstructioncraftingEnvironmentL.get model)
+    eam = envAttunementMod model
+    esm = envSanctificationMod model
+    adm = baseItemConstructionadditionalCostReductionL.get model
   in
-    { toStr = to
-    , def = def
-    , all = all
-    , fromStr = defFromStr to all def
-    }
+    cenv + eam + esm + adm
 
-type ToolType = ToolTypeNone
-              | ToolTypeSubstandard
-              | ToolTypeStandard
-              | ToolTypeAdvanced
-              | ToolTypeMasterwork
-              | ToolTypeMythic
+assistanceTotal : BaseItemConstruction -> Int
+assistanceTotal model = List.sum (List.map (\l -> assistantInput (l.get model)) [baseItemConstructionassistant1L, baseItemConstructionassistant2L, baseItemConstructionassistant3L, baseItemConstructionassistant4L, baseItemConstructionassistant5L])
 
-toolType : StrConv ToolType
-toolType = 
+assistantTotalCost : BaseItemConstruction -> AssistantType -> Float
+assistantTotalCost model t =
   let
-    to t =
-      case t of
-        ToolTypeNone        -> "None"
-        ToolTypeSubstandard -> "Substandard"
-        ToolTypeStandard    -> "Standard"
-        ToolTypeAdvanced    -> "Advanced"
-        ToolTypeMasterwork  -> "Masterwork"
-        ToolTypeMythic      -> "Mythic"
-    all = [ ToolTypeNone, ToolTypeSubstandard, ToolTypeStandard, ToolTypeAdvanced, ToolTypeMasterwork, ToolTypeMythic ]
-    def = ToolTypeNone
+    c = assistantInput t
+    cet = environmentTotal model
+    wwh = cet + 56
+    cin = crafterInput (baseItemConstructioncrafterTypeL.get model)
+    cat = assistanceTotal model
+    stt = toolTotal model
+    tci = stt + toFloat cat + toFloat cin
+    tww = toFloat wwh / tci
+    tc = toFloat c / tww
+  in 
+    tc
+
+craftingAssistantCostTotal : BaseItemConstruction -> Float
+craftingAssistantCostTotal model = 
+  List.sum (List.map (\l -> assistantTotalCost model (l.get model)) [ baseItemConstructionassistant1L, baseItemConstructionassistant2L, baseItemConstructionassistant3L, baseItemConstructionassistant4L, baseItemConstructionassistant5L ] )
+
+-- Divide Total Hours by 56
+totalWorkWeeks : BaseItemConstruction -> Float
+totalWorkWeeks model = totalHours model / 56
+
+totalHours : BaseItemConstruction -> Float
+totalHours model =
+  let
+    cet = environmentTotal model
+    wwh = cet + 56
+    cin = crafterInput (baseItemConstructioncrafterTypeL.get model)
+    cat = assistanceTotal model
+    stt = toolTotal model
+    tci = stt + toFloat cat + toFloat cin
+    bip = baseItemConstructionbaseItemPriceL.get model
+    tww = toFloat bip / tci
   in
-    { toStr = to
-    , def = def
-    , all = all
-    , fromStr = defFromStr to all def
-    }
+    tww * toFloat wwh
 
-type alias Tool =
-  { toolType_ : ToolType
-  , magical_ : Bool
-  , sanctification_ : Sanctification
-  }
+-- Add Base Materials Costs, Crafting Assistance Cost Total, Additional Crafting Assistance Cost, and Miscellaneous Additional Cost.
+totalCosts : BaseItemConstruction -> Float
+totalCosts model =
+  let
+    bmc = baseMaterialCost model
+    cact = craftingAssistantCostTotal model
+    acac = baseItemConstructionadditionalCraftingAssistanceCostL.get model
+    mac = baseItemConstructionmiscAdditionalCostL.get model
+  in
+    bmc + cact + toFloat acac + toFloat mac
+    
 
-initTool : Tool
-initTool =
-  { toolType_ = toolType.def
-  , magical_ = False
-  , sanctification_ = sanctification.def
-  }
+toolInput : BaseItemConstruction -> Lens BaseItemConstruction Tool -> Float
+toolInput model lens =
+  let
+    inp = crafterInput (baseItemConstructioncrafterTypeL.get model)
+    m = (compose lens toolmagicalL).get model
+    t = (compose lens tooltoolTypeL).get model
+    s = (compose lens toolsanctificationL).get model
+    magBonus = if m then 5 else 0
+    base = case t of
+            ToolTypeNone -> 0
+            ToolTypeSubstandard -> inp - 10
+            ToolTypeStandard -> inp + 0
+            ToolTypeAdvanced -> inp + 10
+            ToolTypeMasterwork -> inp + 15
+            ToolTypeMythic -> inp * 3
+    sact = case s of
+            SanctificationNone -> toFloat base + 0
+            SanctificationBasic -> toFloat base + 10
+            SanctificationThemed -> toFloat base * 1.5
+  in
+    if (sact == 0) then 0 else sact + magBonus
 
-toolTypeL : Lens Tool ToolType
-toolTypeL = Lens .toolType_ (\x a -> { a | toolType_ = x })
-
-toolTypeStr : Lens Tool String
-toolTypeStr = toStrLens toolType toolTypeL
-
-magicalL : Lens Tool Bool
-magicalL = Lens .magical_ (\x a -> { a | magical_ = x })
-
-sanctificationL : Lens Tool Sanctification
-sanctificationL = Lens .sanctification_ (\x a -> { a | sanctification_ = x })
-
-sanctificationStr : Lens Tool String
-sanctificationStr = toStrLens sanctification sanctificationL
-
-type alias BaseItemConstruction =
-  { baseItemPrice_ : Int
-  , crafterType_ : CrafterType
-  , craftingEnvironment_ : CraftingEnvironment
-  , environmentAttuned_ : Bool
-  , environmentSanctification_ : Sanctification
-  , additionalCostReduction_ : Int
-  , assistant1_ : AssistantType
-  , assistant2_ : AssistantType
-  , assistant3_ : AssistantType
-  , assistant4_ : AssistantType
-  , assistant5_ : AssistantType
-  , tool1_ : Tool
-  , tool2_ : Tool
-  , tool3_ : Tool
-  , tool4_ : Tool
-  , tool5_ : Tool
-  , additionalCraftingAssistanceCost_ : Int
-  , miscAdditionalCost_ : Int
-  }
-
-      
-initBaseItemConstruction : BaseItemConstruction
-initBaseItemConstruction =
-  { baseItemPrice_ = 0
-  , crafterType_ = CrafterTypePlayerCharacter
-  , craftingEnvironment_ = CraftingEnvironmentBasic
-  , environmentAttuned_ = False
-  , environmentSanctification_ = SanctificationNone
-  , additionalCostReduction_ = 0
-  , assistant1_ = AssistantTypeNone
-  , assistant2_ = AssistantTypeNone
-  , assistant3_ = AssistantTypeNone
-  , assistant4_ = AssistantTypeNone
-  , assistant5_ = AssistantTypeNone
-  , tool1_ = initTool
-  , tool2_ = initTool
-  , tool3_ = initTool
-  , tool4_ = initTool
-  , tool5_ = initTool
-  , additionalCraftingAssistanceCost_ = 0
-  , miscAdditionalCost_ = 0
-  }
+toolTotal : BaseItemConstruction -> Float
+toolTotal model = List.sum (List.map (toolInput model) [baseItemConstructiontool1L, baseItemConstructiontool2L, baseItemConstructiontool3L, baseItemConstructiontool4L, baseItemConstructiontool5L])

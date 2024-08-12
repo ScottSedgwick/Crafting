@@ -1,47 +1,9 @@
 module Model.ItemBonusImprovement exposing (..)
 
+import Model exposing (..)
 import Model.Shared exposing (..)
 import Monocle.Lens exposing (..)
 import Utils exposing (..)
-
-type alias ItemBonusImprovement =
-  { currentRarity : StartingItemRarity
-  , crafterType : CrafterType
-  }
-
-initItemBonusImprovement : ItemBonusImprovement
-initItemBonusImprovement =
-  { currentRarity = StartingItemRarityUncommon
-  , crafterType = CrafterTypePlayerCharacter
-  }
-
-currentRarityL : Lens ItemBonusImprovement StartingItemRarity
-currentRarityL = Lens .currentRarity (\x a -> { a | currentRarity = x } )
-
-crafterTypeL : Lens ItemBonusImprovement CrafterType
-crafterTypeL = Lens .crafterType (\x a -> { a | crafterType = x } )
-
-type StartingItemRarity
-  = StartingItemRarityUncommon
-  | StartingItemRarityRare
-  | StartingItemRarityVeryRare
-
-startingItemRarity : StrConv StartingItemRarity
-startingItemRarity =
-  let
-    to c =
-      case c of
-        StartingItemRarityUncommon -> "Uncommon"
-        StartingItemRarityRare     -> "Rare"
-        StartingItemRarityVeryRare -> "Very Rare"
-    all = [ StartingItemRarityUncommon, StartingItemRarityRare, StartingItemRarityVeryRare ]
-    def = StartingItemRarityUncommon
-  in
-    { toStr = to
-    , def = def
-    , all = all
-    , fromStr = defFromStr to all def
-    }
 
 finalRarity : StartingItemRarity -> ItemRarity
 finalRarity r =
@@ -71,9 +33,9 @@ baseEnchantmentTimeWeeks r =
 crafterImprovementPercentage : CrafterType -> Float
 crafterImprovementPercentage t =
   case t of
-    CrafterTypePlayerCharacter     -> 0.85
-    CrafterTypeArtificer           -> 0.75
-    CrafterTypeArtificerSpecialist -> 0.65
+    CrafterTypePlayerCharacter        -> 0.85
+    CrafterTypeArtificerNotSpeciality -> 0.75
+    CrafterTypeArtificerSpeciality    -> 0.65
 
 totalImprovementCost : ItemBonusImprovement -> Float
 totalImprovementCost model = toFloat (baseEnchantmentCost (finalRarity model.currentRarity)) * crafterImprovementPercentage model.crafterType
