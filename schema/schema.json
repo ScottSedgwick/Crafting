@@ -1,516 +1,527 @@
-[
-    { 
-        "contents" : { 
-            "lens" : true,
-            "objectName" : "Model",
-            "properties" : [
-                {   "propName" : "currentTab",
-                    "propType" : "TabName",
-                    "initValue" : "TabNameBaseItemConstruction",
+{
+    "classes": [
+        {
+            "lens": true,
+            "objectName": "Model",
+            "properties": [
+                {
+                    "initValue": "TabNameBaseItemConstruction",
+                    "propName": "currentTab",
+                    "propType": "TabName",
                     "stringLens": true
                 },
-                {   "propName" : "baseItemConstruction",
-                    "propType" : "BaseItemConstruction",
-                    "initValue" : "initBaseItemConstruction",
+                {
+                    "initValue": "initWorkingConditions",
+                    "propName": "workingConditions",
+                    "propType": "WorkingConditions",
                     "stringLens": false
                 },
-                {   "propName" : "baseItemImprovement",
-                    "propType" : "BaseItemImprovement",
-                    "initValue" : "initBaseItemImprovement",
+                {
+                    "initValue": "initBaseItemConstruction",
+                    "propName": "baseItemConstruction",
+                    "propType": "BaseItemConstruction",
                     "stringLens": false
                 },
-                {   "propName" : "itemEnchantment",
-                    "propType" : "ItemEnchantment",
-                    "initValue" : "initItemEnchantment",
+                {
+                    "initValue": "initBaseItemImprovement",
+                    "propName": "baseItemImprovement",
+                    "propType": "BaseItemImprovement",
                     "stringLens": false
                 },
-                {   "propName" : "itemBonusImprovement",
-                    "propType" : "ItemBonusImprovement",
-                    "initValue" : "initItemBonusImprovement",
+                {
+                    "initValue": "initItemEnchantment",
+                    "propName": "itemEnchantment",
+                    "propType": "ItemEnchantment",
+                    "stringLens": false
+                },
+                {
+                    "initValue": "initItemBonusImprovement",
+                    "propName": "itemBonusImprovement",
+                    "propType": "ItemBonusImprovement",
                     "stringLens": false
                 }
             ]
         },
-        "tag" : "Object"
-    },
-    {
-        "contents":{
-            "converter" : false,
-            "enumName" : "Msg",
-            "values" : ["ChangeTab TabName", "UpdateStr (Lens Model String) String", "UpdateBool (Lens Model Bool) Bool"],
-            "def" : ""
-        },
-        "tag" : "Enum"
-    },
-    {
-        "contents":{
-            "converter" : true,
-            "enumName" : "TabName",
-            "values" : [ "Base Item Construction", "Base Item Improvement", "Item Enchantment", "Item Bonus Improvement", "Item Ability Improvement", "New Item Research", "Sentient Items", "Artifacts" ],
-            "def" : "Base Item Construction"
-        },
-        "tag" : "Enum"
-    },
-    {
-        "contents":{
-            "converter" : true,
-            "enumName" : "CrafterType",
-            "values" : [ "Player Character", "Artificer Not Speciality", "Artificer Speciality" ],
-            "def" : "Player Character"
-        },
-        "tag" : "Enum"
-    },
-    {
-        "contents":{
-            "converter" : true,
-            "enumName" : "AssistantType",
-            "values" : [ "None", "Not Proficient", "Half Proficient", "Proficient", "Player Character", "Expertise", "Artificer Not Speciality", "Artificer Speciality" ],
-            "def" : "None"
-        },
-        "tag" : "Enum"
-    },
-    {
-        "contents":{
-            "converter" : true,
-            "enumName" : "ItemRarity",
-            "values" : [ "Common", "Uncommon", "Rare", "Very Rare", "Legendary" ],
-            "def" : "Common"
-        },
-        "tag" : "Enum"
-    },
-    {
-        "contents":{
-            "converter" : true,
-            "enumName" : "CraftingEnvironment",
-            "values" : [ "Very Crude", "Crude", "Basic", "Advanced", "Expert", "Apex" ],
-            "def" : "Basic"
-        },
-        "tag" : "Enum"
-    },
-    {
-        "contents":{
-            "converter" : true,
-            "enumName" : "Sanctification",
-            "values" : [ "None", "Basic", "Themed" ],
-            "def" : "None"
-        },
-        "tag" : "Enum"
-    },
-    {
-        "contents":{
-            "converter" : true,
-            "enumName" : "ToolType",
-            "values" : [ "None", "Substandard", "Standard", "Advanced", "Masterwork", "Mythic" ],
-            "def" : "None"
-        },
-        "tag" : "Enum"
-    },
-    { 
-        "contents" : { 
-            "lens" : true,
-            "objectName" : "Tool",
-            "properties" : [
-                {   "propName" : "toolType",
-                    "propType" : "ToolType",
-                    "initValue" : "toolType.def",
+        {
+            "lens": true,
+            "objectName": "Tool",
+            "properties": [
+                {
+                    "initValue": "toolType.def",
+                    "propName": "toolType",
+                    "propType": "ToolType",
                     "stringLens": true
                 },
-                {   "propName" : "magical",
-                    "propType" : "Bool",
-                    "initValue" : "False",
+                {
+                    "initValue": "False",
+                    "propName": "magical",
+                    "propType": "Bool",
                     "stringLens": true
                 },
-                {   "propName" : "sanctification",
-                    "propType" : "Sanctification",
-                    "initValue" : "sanctification.def",
+                {
+                    "initValue": "sanctification.def",
+                    "propName": "sanctification",
+                    "propType": "Sanctification",
                     "stringLens": true
                 }
             ]
         },
-        "tag" : "Object"
-    },
-    { 
-        "contents" : { 
-            "lens" : true,
-            "objectName" : "BaseItemConstruction",
-            "properties" : [
+        {
+            "lens": true,
+            "objectName": "WorkingConditions",
+            "properties": [
                 {
-                    "propName" : "baseItemPrice",
-                    "propType" : "Int",
-                    "initValue" : "intStrConv.def",
+                    "initValue": "crafterType.def",
+                    "propName": "crafterType",
+                    "propType": "CrafterType",
                     "stringLens": true
                 },
                 {
-                    "propName" : "crafterType",
-                    "propType" : "CrafterType",
-                    "initValue" : "crafterType.def",
+                    "initValue": "boolStrConv.def",
+                    "propName": "magicItemAdept",
+                    "propType": "Bool",
                     "stringLens": true
                 },
                 {
-                    "propName" : "craftingEnvironment",
-                    "propType" : "CraftingEnvironment",
-                    "initValue" : "craftingEnvironment.def",
+                    "initValue": "craftingEnvironment.def",
+                    "propName": "craftingEnvironment",
+                    "propType": "CraftingEnvironment",
                     "stringLens": true
                 },
                 {
-                    "propName" : "environmentAttuned",
-                    "propType" : "Bool",
-                    "initValue" : "boolStrConv.def",
+                    "initValue": "boolStrConv.def",
+                    "propName": "environmentAttuned",
+                    "propType": "Bool",
                     "stringLens": true
                 },
                 {
-                    "propName" : "environmentSanctification",
-                    "propType" : "Sanctification",
-                    "initValue" : "sanctification.def",
+                    "initValue": "sanctification.def",
+                    "propName": "environmentSanctification",
+                    "propType": "Sanctification",
                     "stringLens": true
                 },
                 {
-                    "propName" : "additionalCostReduction",
-                    "propType" : "Int",
-                    "initValue" : "intStrConv.def",
+                    "initValue": "intStrConv.def",
+                    "propName": "additionalCostReduction",
+                    "propType": "Int",
                     "stringLens": true
                 },
                 {
-                    "propName" : "assistant1",
-                    "propType" : "AssistantType",
-                    "initValue" : "assistantType.def",
+                    "initValue": "assistantType.def",
+                    "propName": "assistant1",
+                    "propType": "AssistantType",
                     "stringLens": true
                 },
                 {
-                    "propName" : "assistant2",
-                    "propType" : "AssistantType",
-                    "initValue" : "assistantType.def",
+                    "initValue": "assistantType.def",
+                    "propName": "assistant2",
+                    "propType": "AssistantType",
                     "stringLens": true
                 },
                 {
-                    "propName" : "assistant3",
-                    "propType" : "AssistantType",
-                    "initValue" : "assistantType.def",
+                    "initValue": "assistantType.def",
+                    "propName": "assistant3",
+                    "propType": "AssistantType",
                     "stringLens": true
                 },
                 {
-                    "propName" : "assistant4",
-                    "propType" : "AssistantType",
-                    "initValue" : "assistantType.def",
+                    "initValue": "assistantType.def",
+                    "propName": "assistant4",
+                    "propType": "AssistantType",
                     "stringLens": true
                 },
                 {
-                    "propName" : "assistant5",
-                    "propType" : "AssistantType",
-                    "initValue" : "assistantType.def",
+                    "initValue": "assistantType.def",
+                    "propName": "assistant5",
+                    "propType": "AssistantType",
                     "stringLens": true
                 },
                 {
-                    "propName" : "tool1",
-                    "propType" : "Tool",
-                    "initValue" : "initTool",
+                    "initValue": "initTool",
+                    "propName": "tool1",
+                    "propType": "Tool",
                     "stringLens": false
                 },
                 {
-                    "propName" : "tool2",
-                    "propType" : "Tool",
-                    "initValue" : "initTool",
+                    "initValue": "initTool",
+                    "propName": "tool2",
+                    "propType": "Tool",
                     "stringLens": false
                 },
                 {
-                    "propName" : "tool3",
-                    "propType" : "Tool",
-                    "initValue" : "initTool",
+                    "initValue": "initTool",
+                    "propName": "tool3",
+                    "propType": "Tool",
                     "stringLens": false
                 },
                 {
-                    "propName" : "tool4",
-                    "propType" : "Tool",
-                    "initValue" : "initTool",
+                    "initValue": "initTool",
+                    "propName": "tool4",
+                    "propType": "Tool",
                     "stringLens": false
                 },
                 {
-                    "propName" : "tool5",
-                    "propType" : "Tool",
-                    "initValue" : "initTool",
+                    "initValue": "initTool",
+                    "propName": "tool5",
+                    "propType": "Tool",
                     "stringLens": false
-                },
+                }
+            ]
+        },
+        {
+            "lens": true,
+            "objectName": "BaseItemConstruction",
+            "properties": [
                 {
-                    "propName" : "additionalCraftingAssistanceCost",
-                    "propType" : "Int",
-                    "initValue" : "intStrConv.def",
+                    "initValue": "intStrConv.def",
+                    "propName": "baseItemPrice",
+                    "propType": "Int",
                     "stringLens": true
                 },
                 {
-                    "propName" : "miscAdditionalCost",
-                    "propType" : "Int",
-                    "initValue" : "intStrConv.def",
+                    "initValue": "intStrConv.def",
+                    "propName": "additionalCraftingAssistanceCost",
+                    "propType": "Int",
+                    "stringLens": true
+                },
+                {
+                    "initValue": "intStrConv.def",
+                    "propName": "miscAdditionalCost",
+                    "propType": "Int",
                     "stringLens": true
                 }
             ]
         },
-        "tag" : "Object"
-    },
-    {
-        "contents" : { 
-            "lens" : true,
-            "objectName" : "BaseItemImprovement",
-            "properties" : [
+        {
+            "lens": true,
+            "objectName": "BaseItemImprovement",
+            "properties": [
                 {
-                    "propName" : "itemCategory",
-                    "propType" : "ItemCategory",
-                    "initValue" : "itemCategory.def",
+                    "initValue": "itemCategory.def",
+                    "propName": "itemCategory",
+                    "propType": "ItemCategory",
                     "stringLens": true
                 },
                 {
-                    "propName" : "currentValue",
-                    "propType" : "Int",
-                    "initValue" : "intStrConv.def",
+                    "initValue": "intStrConv.def",
+                    "propName": "currentValue",
+                    "propType": "Int",
                     "stringLens": true
                 },
                 {
-                    "propName" : "currentStatus",
-                    "propType" : "ItemStatus",
-                    "initValue" : "itemStatus.def",
+                    "initValue": "itemStatus.def",
+                    "propName": "currentStatus",
+                    "propType": "ItemStatus",
                     "stringLens": true
                 },
                 {
-                    "propName" : "craftingRoll",
-                    "propType" : "Int",
-                    "initValue" : "intStrConv.def",
+                    "initValue": "intStrConv.def",
+                    "propName": "craftingRoll",
+                    "propType": "Int",
                     "stringLens": true
                 },
                 {
-                    "propName" : "standardCraftingTime",
-                    "propType" : "Float",
-                    "initValue" : "floatStrConv.def",
+                    "initValue": "floatStrConv.def",
+                    "propName": "standardCraftingTime",
+                    "propType": "Float",
                     "stringLens": true
                 }
             ]
         },
-        "tag" : "Object"
-    },
-    {
-        "contents":{
-            "converter" : true,
-            "enumName" : "ItemCategory",
-            "values" : [ "Weapons And Armor", "Art Objects", "Jewelery And Gems", "Clothing", "Miscellaneous" ],
-            "def" : "Weapons And Armor"
-        },
-        "tag" : "Enum"
-    },
-    {
-        "contents":{
-            "converter" : true,
-            "enumName" : "ItemStatus",
-            "values" : ["Crude Or Raw", "Standard Or Unworked", "Worked", "Masterworked"],
-            "def" : "Standard Or Unworked"
-        },
-        "tag" : "Enum"
-    },
-    {
-        "contents" : { 
-            "lens" : true,
-            "objectName" : "ItemBonusImprovement",
-            "properties" : [
+        {
+            "lens": true,
+            "objectName": "ItemBonusImprovement",
+            "properties": [
                 {
-                    "propName" : "currentRarity",
-                    "propType" : "StartingItemRarity",
-                    "initValue" : "startingItemRarity.def",
-                    "stringLens": true
-                },
-                {
-                    "propName" : "crafterType",
-                    "propType" : "CrafterType",
-                    "initValue" : "crafterType.def",
+                    "initValue": "startingItemRarity.def",
+                    "propName": "currentRarity",
+                    "propType": "StartingItemRarity",
                     "stringLens": true
                 }
             ]
         },
-        "tag" : "Object"
-    },
-    {
-        "contents":{
-            "converter" : true,
-            "enumName" : "StartingItemRarity",
-            "values" : ["Uncommon", "Rare", "Very Rare"],
-            "def" : "Uncommon"
-        },
-        "tag" : "Enum"
-    },
-    {
-        "contents" : { 
-            "lens" : true,
-            "objectName" : "ItemEnchantment",
-            "properties" : [
+        {
+            "lens": true,
+            "objectName": "ItemEnchantment",
+            "properties": [
                 {
-                    "propName" : "itemRarity",
-                    "propType" : "ItemRarity",
-                    "initValue" : "itemRarity.def",
+                    "initValue": "itemRarity.def",
+                    "propName": "itemRarity",
+                    "propType": "ItemRarity",
                     "stringLens": true
                 },
                 {
-                    "propName" : "crafterType",
-                    "propType" : "CrafterType",
-                    "initValue" : "crafterType.def",
+                    "initValue": "boolStrConv.def",
+                    "propName": "oneUseItem",
+                    "propType": "Bool",
                     "stringLens": true
                 },
                 {
-                    "propName" : "assistant1",
-                    "propType" : "AssistantType",
-                    "initValue" : "assistantType.def",
+                    "initValue": "mimicASpell.def",
+                    "propName": "mimicASpell",
+                    "propType": "MimicASpell",
                     "stringLens": true
                 },
                 {
-                    "propName" : "assistant2",
-                    "propType" : "AssistantType",
-                    "initValue" : "assistantType.def",
+                    "initValue": "intStrConv.def",
+                    "propName": "numberOfDifferentSpells",
+                    "propType": "Int",
                     "stringLens": true
                 },
                 {
-                    "propName" : "assistant3",
-                    "propType" : "AssistantType",
-                    "initValue" : "assistantType.def",
+                    "initValue": "boolStrConv.def",
+                    "propName": "accessToIdenticalItem",
+                    "propType": "Bool",
                     "stringLens": true
                 },
                 {
-                    "propName" : "assistant4",
-                    "propType" : "AssistantType",
-                    "initValue" : "assistantType.def",
+                    "initValue": "replicateMagicItem.def",
+                    "propName": "replicateMagicItem",
+                    "propType": "ReplicateMagicItem",
                     "stringLens": true
                 },
                 {
-                    "propName" : "assistant5",
-                    "propType" : "AssistantType",
-                    "initValue" : "assistantType.def",
-                    "stringLens": true
-                },
-                {
-                    "propName" : "magicItemAdept",
-                    "propType" : "Bool",
-                    "initValue" : "boolStrConv.def",
-                    "stringLens": true
-                },
-                {
-                    "propName" : "oneUseItem",
-                    "propType" : "Bool",
-                    "initValue" : "boolStrConv.def",
-                    "stringLens": true
-                },
-                {
-                    "propName" : "mimicASpell",
-                    "propType" : "MimicASpell",
-                    "initValue" : "mimicASpell.def",
-                    "stringLens": true
-                },
-                {
-                    "propName" : "numberOfDifferentSpells",
-                    "propType" : "Int",
-                    "initValue" : "intStrConv.def",
-                    "stringLens": true
-                },
-                {
-                    "propName" : "accessToIdenticalItem",
-                    "propType" : "Bool",
-                    "initValue" : "boolStrConv.def",
-                    "stringLens": true
-                },
-                {
-                    "propName" : "replicateMagicItem",
-                    "propType" : "ReplicateMagicItem",
-                    "initValue" : "replicateMagicItem.def",
-                    "stringLens": true
-                },
-                {
-                    "propName" : "component1",
-                    "propType" : "MagicComponent",
-                    "initValue" : "initMagicComponent",
+                    "initValue": "initMagicComponent",
+                    "propName": "component1",
+                    "propType": "MagicComponent",
                     "stringLens": false
                 },
                 {
-                    "propName" : "component2",
-                    "propType" : "MagicComponent",
-                    "initValue" : "initMagicComponent",
+                    "initValue": "initMagicComponent",
+                    "propName": "component2",
+                    "propType": "MagicComponent",
                     "stringLens": false
                 },
                 {
-                    "propName" : "component3",
-                    "propType" : "MagicComponent",
-                    "initValue" : "initMagicComponent",
+                    "initValue": "initMagicComponent",
+                    "propName": "component3",
+                    "propType": "MagicComponent",
                     "stringLens": false
                 },
                 {
-                    "propName" : "component4",
-                    "propType" : "MagicComponent",
-                    "initValue" : "initMagicComponent",
+                    "initValue": "initMagicComponent",
+                    "propName": "component4",
+                    "propType": "MagicComponent",
                     "stringLens": false
                 },
                 {
-                    "propName" : "component5",
-                    "propType" : "MagicComponent",
-                    "initValue" : "initMagicComponent",
+                    "initValue": "initMagicComponent",
+                    "propName": "component5",
+                    "propType": "MagicComponent",
                     "stringLens": false
                 },
                 {
-                    "propName" : "additionalCost",
-                    "propType" : "Int",
-                    "initValue" : "intStrConv.def",
+                    "initValue": "intStrConv.def",
+                    "propName": "additionalCost",
+                    "propType": "Int",
                     "stringLens": true
                 }
             ]
         },
-        "tag" : "Object"
-    },
-    {
-        "contents":{
-            "converter" : true,
-            "enumName" : "MimicASpell",
-            "values" : ["No", "Yes but crafter has no access to it", "Cast 1 time a week", "Cast 2 times a week", "Cast 3 times a week", "Cast 4 times a week", "Cast 5 times a week", "Cast 6 times a week", "Cast 7 times a week"],
-            "def" : "No"
-        },
-        "tag" : "Enum"
-    },
-    {
-        "contents":{
-            "converter" : true,
-            "enumName" : "ReplicateMagicItem",
-            "values" : ["No", "Yes but the crafter has no access", "Yes but it is not active", "Yes and it is active"],
-            "def" : "No"
-        },
-        "tag" : "Enum"
-    },
-    {
-        "contents" : { 
-            "lens" : true,
-            "objectName" : "MagicComponent",
-            "properties" : [
-                { 
-                    "propName" : "componentType",
-                    "propType" : "ComponentItemRarity",
-                    "initValue" : "componentItemRarity.def",
+        {
+            "lens": true,
+            "objectName": "MagicComponent",
+            "properties": [
+                {
+                    "initValue": "componentItemRarity.def",
+                    "propName": "componentType",
+                    "propType": "ComponentItemRarity",
                     "stringLens": true
                 },
-                { 
-                    "propName" : "alignment",
-                    "propType" : "ComponentAlignment",
-                    "initValue" : "componentAlignment.def",
+                {
+                    "initValue": "componentAlignment.def",
+                    "propName": "alignment",
+                    "propType": "ComponentAlignment",
                     "stringLens": true
                 }
             ]
+        }
+    ],
+    "enums": [
+        {
+            "converter": false,
+            "def": "",
+            "enumName": "Msg",
+            "values": [
+                "ChangeTab TabName",
+                "UpdateStr (Lens Model String) String",
+                "UpdateBool (Lens Model Bool) Bool"
+            ]
         },
-        "tag" : "Object"
-    },
-    {
-        "contents":{
-            "converter" : true,
-            "enumName" : "ComponentAlignment",
-            "values" : ["None", "Thematic", "Magical", "Elemental", "Draconic", "Divine", "Unique"],
-            "def" : "None"
+        {
+            "converter": true,
+            "def": "Base Item Construction",
+            "enumName": "TabName",
+            "values": [
+                "Base Item Construction",
+                "Base Item Improvement",
+                "Item Enchantment",
+                "Item Bonus Improvement",
+                "Item Ability Improvement",
+                "New Item Research",
+                "Sentient Items",
+                "Artifacts"
+            ]
         },
-        "tag" : "Enum"
-    },
-    {
-        "contents":{
-            "converter" : true,
-            "enumName" : "ComponentItemRarity",
-            "values" : ["None", "Common", "Uncommon", "Rare", "Very Rare", "Legendary"],
-            "def" : "None"
+        {
+            "converter": true,
+            "def": "Player Character",
+            "enumName": "CrafterType",
+            "values": [
+                "Player Character",
+                "Artificer Not Speciality",
+                "Artificer Speciality"
+            ]
         },
-        "tag" : "Enum"
-    }
-]
+        {
+            "converter": true,
+            "def": "None",
+            "enumName": "AssistantType",
+            "values": [
+                "None",
+                "Not Proficient",
+                "Half Proficient",
+                "Proficient",
+                "Player Character",
+                "Expertise",
+                "Artificer Not Speciality",
+                "Artificer Speciality"
+            ]
+        },
+        {
+            "converter": true,
+            "def": "Common",
+            "enumName": "ItemRarity",
+            "values": [
+                "Common",
+                "Uncommon",
+                "Rare",
+                "Very Rare",
+                "Legendary"
+            ]
+        },
+        {
+            "converter": true,
+            "def": "Basic",
+            "enumName": "CraftingEnvironment",
+            "values": [
+                "Very Crude",
+                "Crude",
+                "Basic",
+                "Advanced",
+                "Expert",
+                "Apex"
+            ]
+        },
+        {
+            "converter": true,
+            "def": "None",
+            "enumName": "Sanctification",
+            "values": [
+                "None",
+                "Basic",
+                "Themed"
+            ]
+        },
+        {
+            "converter": true,
+            "def": "None",
+            "enumName": "ToolType",
+            "values": [
+                "None",
+                "Substandard",
+                "Standard",
+                "Advanced",
+                "Masterwork",
+                "Mythic"
+            ]
+        },
+        {
+            "converter": true,
+            "def": "Weapons And Armor",
+            "enumName": "ItemCategory",
+            "values": [
+                "Weapons And Armor",
+                "Art Objects",
+                "Jewelery And Gems",
+                "Clothing",
+                "Miscellaneous"
+            ]
+        },
+        {
+            "converter": true,
+            "def": "Standard Or Unworked",
+            "enumName": "ItemStatus",
+            "values": [
+                "Crude Or Raw",
+                "Standard Or Unworked",
+                "Worked",
+                "Masterworked"
+            ]
+        },
+        {
+            "converter": true,
+            "def": "Uncommon",
+            "enumName": "StartingItemRarity",
+            "values": [
+                "Uncommon",
+                "Rare",
+                "Very Rare"
+            ]
+        },
+        {
+            "converter": true,
+            "def": "No",
+            "enumName": "MimicASpell",
+            "values": [
+                "No",
+                "Yes but crafter has no access to it",
+                "Cast 1 time a week",
+                "Cast 2 times a week",
+                "Cast 3 times a week",
+                "Cast 4 times a week",
+                "Cast 5 times a week",
+                "Cast 6 times a week",
+                "Cast 7 times a week"
+            ]
+        },
+        {
+            "converter": true,
+            "def": "No",
+            "enumName": "ReplicateMagicItem",
+            "values": [
+                "No",
+                "Yes but the crafter has no access",
+                "Yes but it is not active",
+                "Yes and it is active"
+            ]
+        },
+        {
+            "converter": true,
+            "def": "None",
+            "enumName": "ComponentAlignment",
+            "values": [
+                "None",
+                "Thematic",
+                "Magical",
+                "Elemental",
+                "Draconic",
+                "Divine",
+                "Unique"
+            ]
+        },
+        {
+            "converter": true,
+            "def": "None",
+            "enumName": "ComponentItemRarity",
+            "values": [
+                "None",
+                "Common",
+                "Uncommon",
+                "Rare",
+                "Very Rare",
+                "Legendary"
+            ]
+        }
+    ]
+}

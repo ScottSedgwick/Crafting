@@ -5,6 +5,7 @@ import Html.Attributes exposing (..)
 import Html.Events exposing ( onClick )
 import Model exposing (..)
 import Model.Shared exposing (..)
+import View.WorkingEnvironment as WorkingEnvironment
 import View.BaseItemConstruction as BaseItemConstruction
 import View.BaseItemImprovement as BaseItemImprovement
 import View.ItemEnchantment as ItemEnchantment
@@ -18,19 +19,24 @@ view : Model -> Html Msg
 view model = 
   div []
     [ div [ class "w3-tab-bar w3-block" ] (List.map (tabButton model) tabName.all)
-    , div [class "tabs" ] (List.map (tabView model) tabName.all)
+    , div [ class "flex-container" ]
+      [ div [] 
+        [ WorkingEnvironment.view model
+        ]
+      , div [class "tabs" ] (List.map (tabView model) tabName.all)
+      ]
     ]
     
 tabButton : Model -> TabName -> Html Msg
 tabButton model tab =
-  button [ class (tabButtonClass (modelcurrentTabL.get model == tab)), onClick (ChangeTab tab) ] [ text (tabName.toStr tab) ]
+  button [ class (tabButtonClass (currentTabL.get model == tab)), onClick (ChangeTab tab) ] [ text (tabName.toStr tab) ]
 
 tabButtonClass : Bool -> String
 tabButtonClass current = if current then "tab-button w3-tab-bar-item w3-button w3-highlight-tab" else "tab-button w3-tab-bar-item w3-button"
 
 tabView : Model -> TabName -> Html Msg
 tabView model tab =
-  div [ id (tabId tab), class "city", style "display" (tabViewDisplay (tab == modelcurrentTabL.get model)) ]
+  div [ id (tabId tab), class "city", style "display" (tabViewDisplay (tab == currentTabL.get model)) ]
     [ case tab of
         TabNameBaseItemConstruction -> BaseItemConstruction.view model
         TabNameBaseItemImprovement -> BaseItemImprovement.view model

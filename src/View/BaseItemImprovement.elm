@@ -14,19 +14,13 @@ import View.Utils exposing (..)
 
 view : Model -> Html Msg
 view model = 
-  div [ class "flex-container" ]
-  [ leftPane
-  , rightPane model
-  ]
-
--------------------------------------------------------------------------------
--- leftPane
--------------------------------------------------------------------------------
-leftPane : Html Msg
-leftPane =
   div []
-    [ div [ class "section-header" ] [ text "Crafting Item Status & Threshold" ]
-    , table [] (List.map (\x -> infoTable (itemCategory.toStr x) (thresholds x)) itemCategory.all)
+    [ craftingSection model
+    , hr [] []
+    , div [ class "section-header" ] [ text "Calculating Value" ]
+    , valueSection model
+    , div [ class "section-header" ] [ text "Calculating Time" ]
+    , timeSection model
     ]
 
 infoTable : String -> (ItemStatus -> Int) -> Html Msg
@@ -42,28 +36,13 @@ infoTable caption f =
 row : String -> Int -> Html Msg
 row c1 c2 = tr [ class "shaded" ] [ td [] [ text c1 ], td [ style "text-align" "center" ] [ text (String.fromInt c2) ] ]
 
--------------------------------------------------------------------------------
--- rightPane
--------------------------------------------------------------------------------
-
-rightPane : Model -> Html Msg
-rightPane model =
-  div []
-  [ craftingSection model
-  , hr [] []
-  , div [ class "section-header" ] [ text "Calculating Value" ]
-  , valueSection model
-  , div [ class "section-header" ] [ text "Calculating Time" ]
-  , timeSection model
-  ]
-
 craftingSection : Model -> Html Msg
 craftingSection model =
   let
-    lic = compose modelbaseItemImprovementL baseItemImprovementitemCategoryL
-    lcv = compose modelbaseItemImprovementL baseItemImprovementcurrentValueL
+    lic = compose baseItemImprovementL itemCategoryL
+    lcv = compose baseItemImprovementL currentValueL
     scv = toStrLens intStrConv lcv
-    lcs = compose modelbaseItemImprovementL baseItemImprovementcurrentStatusL
+    lcs = compose baseItemImprovementL currentStatusL
   in 
     table [] 
     [ tr [] 
@@ -87,7 +66,7 @@ craftingSection model =
 valueSection : Model -> Html Msg
 valueSection model =
   let
-    lcv = compose modelbaseItemImprovementL baseItemImprovementcraftingRollL
+    lcv = compose baseItemImprovementL craftingRollL
     scv = toStrLens intStrConv lcv
   in
     table []
@@ -105,7 +84,7 @@ valueSection model =
         , br [] []
         , span [ class "info" ] [ text "(Divide the Crafting Roll by Crafting Threshold, rounding down. Maximum answer of 5.)" ]
         ]
-      , td [] [ span [ class "label" ] [ text (String.fromInt (craftingResult (modelbaseItemImprovementL.get model))) ] ]
+      , td [] [ span [ class "label" ] [ text (String.fromInt (craftingResult model.baseItemImprovement)) ] ]
       ]
     , tr []
       [ td [] 
@@ -113,7 +92,7 @@ valueSection model =
         , br [] []
         , span [ class "info" ] [ text "(Multiply the Current Item Value by the Crafting Result.)" ]
         ]
-      , td [] [ span [ class "label" ] [ text (String.fromInt (newItemValue (modelbaseItemImprovementL.get model))) ] ]
+      , td [] [ span [ class "label" ] [ text (String.fromInt (newItemValue model.baseItemImprovement)) ] ]
       ]
     ]
 
@@ -121,7 +100,7 @@ valueSection model =
 timeSection : Model -> Html Msg
 timeSection model =
   let
-    sct = toStrLens floatStrConv (compose modelbaseItemImprovementL baseItemImprovementstandardCraftingTimeL)
+    sct = toStrLens floatStrConv (compose baseItemImprovementL standardCraftingTimeL)
   in
     table [] 
     [ tr []
@@ -138,6 +117,6 @@ timeSection model =
         , br [] []
         , span [ class "info" ] [ text "(Multiply Standard Crafting Time by Crafting Result.)" ]
         ]
-      , td [] [ span [ class "label" ] [ text (Round.round 2 (timeToCompletion (modelbaseItemImprovementL.get model))) ] ]
+      , td [] [ span [ class "label" ] [ text (Round.round 2 (timeToCompletion model.baseItemImprovement)) ] ]
       ]
     ]

@@ -59,6 +59,6 @@ mkInput model strConv lens =
 sectionHeader : String -> String -> Html Msg
 sectionHeader title subscript =
   div [] 
-  [ div [ class "section-header" ] [ text title ]
-  , div [ class "section-subscript" ] [ text subscript ]
+  [ span [ class "section-header" ] [ text (title ++ " ") ]
+  , span [ class "section-subscript" ] [ text subscript ]
   ]

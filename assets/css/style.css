@@ -77,6 +77,15 @@ div.input-row > input, div.input-row > select {
   margin-top: 0px;
 }
 
+.section-total {
+  font-size: 12px;
+  font-style: italic;
+  font-weight: bold;
+  float: right;
+  padding-top: 0px;
+  margin-top: 0px;
+}
+
 .assistant-section {
   padding-top: 0px;
   margin-top: 0px;

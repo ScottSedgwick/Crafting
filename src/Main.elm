@@ -15,7 +15,7 @@ init _ = ( initModel, Cmd.none )
 update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
   case msg of
-    ChangeTab t         -> ( modelcurrentTabL.set t model, Cmd.none )
+    ChangeTab t         -> ( currentTabL.set t model, Cmd.none )
     UpdateStr lens v    -> ( lens.set v model      , Cmd.none )
     UpdateBool lens v   -> ( lens.set v model      , Cmd.none)
 
