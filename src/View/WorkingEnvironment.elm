@@ -99,38 +99,45 @@ sectionTools model =
       , span [ class "section-subscript" ] [ text "(Fill in the additional crafting input for each tool)" ]
       , span [ class "section-total" ] [ text ("Special Tools Total: " ++ Round.round 2 (toolTotal (workingConditionsL.get model)) ++ " gp") ]
       ]
-    , table []
-      [ rowToolInput model "1" tool1L
-      , rowToolSantification model "1" tool1L
-      , rowToolInput model "2" tool2L
-      , rowToolSantification model "2" tool2L
-      , rowToolInput model "3" tool3L
-      , rowToolSantification model "3" tool3L
-      , rowToolInput model "4" tool4L
-      , rowToolSantification model "4" tool4L
-      , rowToolInput model "5" tool5L
-      , rowToolSantification model "5" tool5L
-      ]
+    , table [] (allTools model [ ("1", tool1L), ("2", tool2L), ("3", tool3L), ("4", tool4L), ("5", tool5L) ] )
     ]
+
+allTools : Model -> List (String , Lens WorkingConditions Tool) -> List (Html Msg)
+allTools model xs = 
+  let
+    divider = [ hr [ class "dotted" ] [] ]
+    tools = List.map (toolSet model) xs
+  in 
+    List.concat (List.intersperse divider tools)
+
+toolSet : Model -> (String, Lens WorkingConditions Tool) -> List (Html Msg)
+toolSet model (num, lens) =
+  [ rowToolInput model num lens
+  , rowToolMagic model num lens
+  , rowToolSantification model num lens
+  ]
 
 rowToolInput : Model -> String -> Lens WorkingConditions Tool -> Html Msg
 rowToolInput model num lens = 
   let
     l = compose workingConditionsL lens
     lt = compose l toolTypeL
-    lm = compose l magicalL
   in
     tr []
-    [ td [] 
-      [ table []
-        [ tr []
-          [ td [] [span [ class "label", style "float" "left" ] [ text ("Tool " ++ num ++ " Quality:") ] ]
-          , td [ style "width" "25%" ] [ input [ class "checkbox", type_ "checkbox", onCheck (UpdateBool lm), checked (lm.get model) ] [], span [ class "info" ] [ text "Magical" ] ]
-          ]
-        ]
-      ]
+    [ td [ class "label" ] [ text ("Tool " ++ num ++ " Quality:") ] 
     , td [] [ mkSelect model toolType lt ]
     ]
+
+rowToolMagic : Model -> String -> Lens WorkingConditions Tool -> Html Msg
+rowToolMagic model num lens = 
+  let
+    l = compose workingConditionsL lens
+    lm = compose l magicalL
+  in
+    tr [] 
+      [ td [ class "label" ] [ text ("Tool " ++ num ++ " Magical Bonus:") ] 
+      , mkSelect model magicBonus lm 
+      ]
 
 rowToolSantification : Model -> String -> Lens WorkingConditions Tool -> Html Msg
 rowToolSantification model num lens = 
@@ -216,7 +223,7 @@ sectionTime : Model -> Html Msg
 sectionTime model =
   let
     cet = environmentTotal model.workingConditions
-    wwh = cet + 56
+    wwh = workWeekHours model.workingConditions
   in
     div []
     [ hr [] []

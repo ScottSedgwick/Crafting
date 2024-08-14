@@ -1,13 +1,7 @@
 module Model.ItemEnchantment exposing (..)
 
 import Model exposing (..)
-
--- import Model exposing (..)
--- import Model.Shared exposing (..)
--- import Model.WorkingConditions exposing (..)
--- import Monocle.Lens exposing (..)
--- import StrConv exposing (..)
--- import Utils exposing (..)
+import Model.WorkingConditions exposing (..)
 
 baseEnchantmentCost : Model -> Float
 baseEnchantmentCost model =
@@ -29,19 +23,24 @@ baseEnchantmentCost model =
   in
     base * mult1 * mult2 * mult3 * mult4
 
+-- This should be the base enchantment cost, divided by the total crafter input
 baseEnchantmentTimeWeeks : Model -> Float
 baseEnchantmentTimeWeeks model =
   let 
-    base = case model.itemEnchantment.itemRarity of 
-            ItemRarityCommon    -> 1
-            ItemRarityUncommon  -> 2
-            ItemRarityRare      -> 10
-            ItemRarityVeryRare  -> 25
-            ItemRarityLegendary -> 50
+    base = baseEnchantmentCost model / totalCrafterInput model
     mult1 = if applyMagicItemAdept model then 0.25 else 1.0
     mult2 = if model.itemEnchantment.oneUseItem then 0.5 else 1.0
   in
     base * mult1 * mult2 
+
+totalTimeHours : Model -> Float
+totalTimeHours model = baseEnchantmentTimeWeeks model * toFloat (workWeekHours model.workingConditions)
+
+totalTimeDays : Model -> Float
+totalTimeDays model = totalTimeHours model / 8
+
+totalTimeWeeks : Model -> Float
+totalTimeWeeks model = totalTimeHours model / 56
 
 -- baseWeekMultiplier : ItemEnchantment -> Int
 -- baseWeekMultiplier model =

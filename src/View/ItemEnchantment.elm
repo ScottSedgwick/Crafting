@@ -6,6 +6,7 @@ import Html.Events exposing (..)
 import Model exposing (..)
 import Model.ItemEnchantment exposing (..)
 import Model.Shared exposing (..)
+import Model.WorkingConditions exposing (..)
 import Monocle.Lens exposing (..)
 import Round
 import StrConv exposing (..)
@@ -22,7 +23,8 @@ view model =
     rmi = compose itemEnchantmentL replicateMagicItemL
   in
     div []
-      [ div [ class "section-header" ] [ text "Item Enchantment" ]
+      [ hr [] []
+      , div [ class "section-header" ] [ text "Item Enchantment" ]
       , table [] 
         [ tr [] 
           [ td [] [ span [ class "label" ] [ text "Item Rarity (choose one):" ] ]
@@ -33,13 +35,9 @@ view model =
           , td [] [ span [ class "label" ] [ text (Round.round 2 (baseEnchantmentCost model)) ] ] 
           ]
         , tr [] 
-          [ td [] [ span [ class "label" ] [ text "Base Enchantment Time (weeks):" ] ]
+          [ td [] [ span [ class "label" ] [ text "Base Enchantment Time (§):" ] ]
           , td [] [ span [ class "label" ] [ text (Round.round 2 (baseEnchantmentTimeWeeks model)) ] ] 
           ]
-        -- , tr [] 
-        --   [ td [] [ span [ class "label" ] [ text "Base Enchantment Time (hours):" ] ]
-        --   , td [] [ span [ class "label" ] [ text (Round.round 2 (baseEnchantmentTimeHours model.itemEnchantment)) ] ] 
-        --   ]
         ]
       
       , hr [] []
@@ -76,6 +74,34 @@ view model =
         , tr [] 
           [ td [ class "label" ] [ text "Does the item being created appear on the Replicate Magic Item infusion list?" ]
           , td [] [ mkSelect model replicateMagicItem rmi ]
+          ]
+        ]
+      , hr [] []
+      , div [ class "section-header" ] [ text "Calculating Time:" ]
+      , table [] 
+        [ tr [] 
+          [ td [ class "label" ] [ text "Total Time (hours): " ]
+          , td [ class "label" ] [ text (Round.round 2 (totalTimeHours model)) ]
+          ]
+        , tr [] 
+          [ td [ class "label" ] [ text "Total Time (days): " ]
+          , td [ class "label" ] [ text (Round.round 2 (totalTimeDays model)) ]
+          ]
+        , tr [] 
+          [ td [ class "label" ] [ text "Total Time (weeks): " ]
+          , td [ class "label" ] [ text (Round.round 2 (totalTimeWeeks model)) ]
+          ]
+        ]
+      , hr [] []
+      , div [ class "section-header" ] [ text "Calculating Cost:" ]
+      , table [] 
+        [ tr [] 
+          [ td [ class "label" ] [ text "Assistant Cost:" ]
+          , td [ class "label" ] [ text (Round.round 2 (assistantCostTotal (totalTimeWeeks model) model.workingConditions)) ]
+          ]
+        , tr [] 
+          [ td [ class "label" ] [ text "Total Cost:" ]
+          , td [ class "label" ] [ text (Round.round 2 (assistantCostTotal (totalTimeWeeks model) model.workingConditions + baseEnchantmentCost model)) ]
           ]
         ]
       ]

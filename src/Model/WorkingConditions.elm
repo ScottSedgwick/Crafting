@@ -79,7 +79,7 @@ toolInput model lens =
     m = (compose lens magicalL).get model
     t = (compose lens toolTypeL).get model
     s = (compose lens sanctificationL).get model
-    magBonus = if m then 5 else 0
+    magBonus = magicInput m * 5
     base = case t of
             ToolTypeNone -> 0
             ToolTypeSubstandard -> inp - 10
@@ -92,7 +92,34 @@ toolInput model lens =
             SanctificationBasic -> toFloat base + 10
             SanctificationThemed -> toFloat base * 1.5
   in
-    if (sact == 0) then 0 else sact + magBonus
+    if (sact == 0) then 0 else sact + toFloat magBonus
 
 toolTotal : WorkingConditions -> Float
 toolTotal model = List.sum (List.map (toolInput model) [tool1L, tool2L, tool3L, tool4L, tool5L])
+
+workWeekHours : WorkingConditions -> Int
+workWeekHours model = environmentTotal model + 56
+
+magicInput : MagicBonus -> Int
+magicInput b =
+  case b of
+    MagicBonusNone -> 0
+    MagicBonusPlus1 -> 1
+    MagicBonusPlus2 -> 2
+    MagicBonusPlus3 -> 3
+
+allToolsQualityBonuses : WorkingConditions -> Int
+allToolsQualityBonuses model = List.sum (List.map (\x -> qualityInput x.toolType) [model.tool1, model.tool2, model.tool3, model.tool4, model.tool5])
+
+qualityInput : ToolType -> Int
+qualityInput t =
+  case t of
+    ToolTypeNone -> 0
+    ToolTypeSubstandard -> -1
+    ToolTypeStandard -> 0
+    ToolTypeAdvanced -> 1
+    ToolTypeMasterwork -> 2
+    ToolTypeMythic -> 3
+
+allToolsMagicBonuses : WorkingConditions -> Int
+allToolsMagicBonuses model = List.sum (List.map (\x -> magicInput x.magical) [model.tool1, model.tool2, model.tool3, model.tool4, model.tool5])

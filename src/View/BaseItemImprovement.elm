@@ -6,6 +6,7 @@ import Html.Events exposing (..)
 import Model exposing (..)
 import Model.Shared exposing (..)
 import Model.BaseItemImprovement exposing (..)
+import Model.WorkingConditions exposing (..)
 import Monocle.Lens exposing (..)
 import Round
 import StrConv exposing (..)
@@ -15,12 +16,18 @@ import View.Utils exposing (..)
 view : Model -> Html Msg
 view model = 
   div []
-    [ craftingSection model
+    [ hr [] []
+    , div [ class "section-header" ] [ text "Base Value:" ]
+    , craftingSection model 
     , hr [] []
     , div [ class "section-header" ] [ text "Calculating Value" ]
     , valueSection model
+    , hr [] []
     , div [ class "section-header" ] [ text "Calculating Time" ]
     , timeSection model
+    , hr [] []
+    , div [ class "section-header" ] [ text "Calculating Cost" ]
+    , costSection model
     ]
 
 infoTable : String -> (ItemStatus -> Int) -> Html Msg
@@ -71,6 +78,10 @@ valueSection model =
   in
     table []
     [ tr []
+      [ td [ class "label" ] [ text "Crafting Bonuses" ] 
+      , td [ class "info" ] [ text (craftingBonuses model)]
+      ]
+    , tr []
       [ td [] 
         [ span [ class "label" ] [ text "Crafting Roll"] 
         , br [] []
@@ -96,27 +107,41 @@ valueSection model =
       ]
     ]
 
-
 timeSection : Model -> Html Msg
 timeSection model =
   let
-    sct = toStrLens floatStrConv (compose baseItemImprovementL standardCraftingTimeL)
+    weeks = timeToCompletionWeeks model
+    hours = timeToCompletionHours model
   in
     table [] 
     [ tr []
-      [ td [] 
-        [ span [ class "label" ] [ text "Standard Crafting Time (hours):"] 
-        , br [] []
-        , span [ class "info" ] [ text "(This is the minimum time it takes to make a crafting check. Determined by your DM.)" ]
-        ]
-      , td [] [ input [ type_ "text", placeholder "Standard Crafting Time", value (sct.get model), onInput (UpdateStr sct) ] [] ]
+      [ td [] [ span [ class "label" ] [ text "Base Time to Completion (§):"] ]
+      , td [] [ span [ class "label" ] [ text (Round.round 2 weeks) ] ]
       ]
     , tr []
-      [ td [] 
-        [ span [ class "label" ] [ text "Time to Completion (hours):"] 
-        , br [] []
-        , span [ class "info" ] [ text "(Multiply Standard Crafting Time by Crafting Result.)" ]
-        ]
-      , td [] [ span [ class "label" ] [ text (Round.round 2 (timeToCompletion model.baseItemImprovement)) ] ]
+      [ td [] [ span [ class "label" ] [ text "Time to Completion (hours):"] ]
+      , td [] [ span [ class "label" ] [ text (Round.round 2 hours) ] ]
+      ]
+    , tr []
+      [ td [] [ span [ class "label" ] [ text "Time to Completion (days):"] ]
+      , td [] [ span [ class "label" ] [ text (Round.round 2 (hours / 8)) ] ]
+      ]
+    , tr []
+      [ td [] [ span [ class "label" ] [ text "Time to Completion (weeks):"] ]
+      , td [] [ span [ class "label" ] [ text (Round.round 2 (hours / 56)) ] ]
+      ]
+    ]
+
+costSection : Model -> Html Msg
+costSection model =
+  let
+    hours = timeToCompletionHours model
+    apw = assistanceTotal model.workingConditions
+    acost = (toFloat apw / 56) * hours
+  in
+    table [] 
+    [ tr []
+      [ td [] [ span [ class "label" ] [ text "Assistant cost (gp):"] ]
+      , td [] [ span [ class "label" ] [ text (Round.round 2 acost) ] ]
       ]
     ]

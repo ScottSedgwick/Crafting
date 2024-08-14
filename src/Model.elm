@@ -51,14 +51,14 @@ itemBonusImprovementL = Lens .itemBonusImprovement (\x a -> { a | itemBonusImpro
 ------------------------------------------------------------------------------------------------------
 type alias Tool =
   { toolType : ToolType
-  , magical : Bool
+  , magical : MagicBonus
   , sanctification : Sanctification
   }
 
 initTool : Tool
 initTool =
   { toolType = toolType.def
-  , magical = False
+  , magical = magicBonus.def
   , sanctification = sanctification.def
   }
 
@@ -68,11 +68,11 @@ toolTypeL = Lens .toolType (\x a -> { a | toolType = x } )
 toolTypeStrL : Lens Tool String
 toolTypeStrL = toStrLens toolType toolTypeL
 
-magicalL : Lens Tool Bool
+magicalL : Lens Tool MagicBonus
 magicalL = Lens .magical (\x a -> { a | magical = x } )
 
 magicalStrL : Lens Tool String
-magicalStrL = toStrLens boolStrConv magicalL
+magicalStrL = toStrLens magicBonus magicalL
 
 sanctificationL : Lens Tool Sanctification
 sanctificationL = Lens .sanctification (\x a -> { a | sanctification = x } )
@@ -245,7 +245,6 @@ type alias BaseItemImprovement =
   , currentValue : Int
   , currentStatus : ItemStatus
   , craftingRoll : Int
-  , standardCraftingTime : Float
   }
 
 initBaseItemImprovement : BaseItemImprovement
@@ -254,7 +253,6 @@ initBaseItemImprovement =
   , currentValue = intStrConv.def
   , currentStatus = itemStatus.def
   , craftingRoll = intStrConv.def
-  , standardCraftingTime = floatStrConv.def
   }
 
 itemCategoryL : Lens BaseItemImprovement ItemCategory
@@ -280,12 +278,6 @@ craftingRollL = Lens .craftingRoll (\x a -> { a | craftingRoll = x } )
 
 craftingRollStrL : Lens BaseItemImprovement String
 craftingRollStrL = toStrLens intStrConv craftingRollL
-
-standardCraftingTimeL : Lens BaseItemImprovement Float
-standardCraftingTimeL = Lens .standardCraftingTime (\x a -> { a | standardCraftingTime = x } )
-
-standardCraftingTimeStrL : Lens BaseItemImprovement String
-standardCraftingTimeStrL = toStrLens floatStrConv standardCraftingTimeL
 
 ------------------------------------------------------------------------------------------------------
 -- ItemBonusImprovement
@@ -843,6 +835,33 @@ componentItemRarity =
         ComponentItemRarityLegendary -> "Legendary"
     all = [ComponentItemRarityNone, ComponentItemRarityCommon, ComponentItemRarityUncommon, ComponentItemRarityRare, ComponentItemRarityVeryRare, ComponentItemRarityLegendary]
     def = ComponentItemRarityNone
+  in
+    { toStr = to
+    , def = def
+    , all = all
+    , fromStr = defFromStr to all def
+    }
+
+------------------------------------------------------------------------------------------------------
+-- MagicBonus
+------------------------------------------------------------------------------------------------------
+type MagicBonus
+  = MagicBonusNone
+  | MagicBonusPlus1
+  | MagicBonusPlus2
+  | MagicBonusPlus3
+
+magicBonus : StrConv MagicBonus
+magicBonus =
+  let
+    to x =
+      case x of
+        MagicBonusNone -> "None"
+        MagicBonusPlus1 -> "Plus 1"
+        MagicBonusPlus2 -> "Plus 2"
+        MagicBonusPlus3 -> "Plus 3"
+    all = [MagicBonusNone, MagicBonusPlus1, MagicBonusPlus2, MagicBonusPlus3]
+    def = MagicBonusNone
   in
     { toStr = to
     , def = def

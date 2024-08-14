@@ -53,9 +53,9 @@
                     "stringLens": true
                 },
                 {
-                    "initValue": "False",
+                    "initValue": "magicBonus.def",
                     "propName": "magical",
-                    "propType": "Bool",
+                    "propType": "MagicBonus",
                     "stringLens": true
                 },
                 {
@@ -218,12 +218,6 @@
                     "initValue": "intStrConv.def",
                     "propName": "craftingRoll",
                     "propType": "Int",
-                    "stringLens": true
-                },
-                {
-                    "initValue": "floatStrConv.def",
-                    "propName": "standardCraftingTime",
-                    "propType": "Float",
                     "stringLens": true
                 }
             ]
@@ -521,6 +515,17 @@
                 "Rare",
                 "Very Rare",
                 "Legendary"
+            ]
+        },
+        {
+            "converter": true,
+            "def": "None",
+            "enumName": "MagicBonus",
+            "values": [
+                "None",
+                "Plus 1",
+                "Plus 2",
+                "Plus 3"
             ]
         }
     ]

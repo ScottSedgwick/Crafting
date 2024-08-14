@@ -1,6 +1,7 @@
 module Model.BaseItemImprovement exposing (..)
 
 import Model exposing (..)
+import Model.WorkingConditions exposing (..)
 import Utils exposing (..)
 
 thresholds : ItemCategory -> (ItemStatus -> Int)
@@ -66,10 +67,34 @@ newItemValue model =
   in
     oldVal * res
 
-timeToCompletion : BaseItemImprovement -> Float
-timeToCompletion model =
+timeToCompletionWeeks : Model -> Float
+timeToCompletionWeeks model =
   let
-    sct = model.standardCraftingTime
-    crs = craftingResult model
+    input = totalCrafterInput model
+    oldVal = model.baseItemImprovement.currentValue
+    value = newItemValue model.baseItemImprovement
+    mintime = toFloat oldVal / input
+    maxtime = toFloat (value - oldVal) / input
   in
-    sct * toFloat crs
+    if mintime > maxtime then mintime else maxtime
+
+timeToCompletionHours : Model -> Float
+timeToCompletionHours model =
+    timeToCompletionWeeks model * toFloat (workWeekHours model.workingConditions)
+
+craftingBonuses : Model -> String
+craftingBonuses model =
+  let
+    help = if assistanceTotal model.workingConditions > 0 then "Advantage on roll due to assistants. " else ""
+    tqb = allToolsQualityBonuses model.workingConditions
+    quality = if tqb /= 0 then (sign tqb ++ " to roll for tool quality bonuses. ") else ""
+    tmb = allToolsMagicBonuses model.workingConditions
+    magic = if tmb > 0 then (sign tmb ++ " to roll for tool magic bonuses. ") else ""
+  in 
+    help ++ quality ++ magic
+
+sign : Int -> String
+sign x =
+  if x >= 0 
+  then "+" ++ String.fromInt x
+  else String.fromInt x
