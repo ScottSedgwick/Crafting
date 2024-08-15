@@ -2,6 +2,7 @@ module Model.ItemEnchantment exposing (..)
 
 import Model exposing (..)
 import Model.WorkingConditions exposing (..)
+import Monocle.Lens exposing (..)
 
 baseEnchantmentCost : Model -> Float
 baseEnchantmentCost model =
@@ -34,7 +35,11 @@ baseEnchantmentTimeWeeks model =
     base * mult1 * mult2 
 
 totalTimeHours : Model -> Float
-totalTimeHours model = baseEnchantmentTimeWeeks model * toFloat (workWeekHours model.workingConditions)
+totalTimeHours model = 
+  let
+    res = (baseEnchantmentTimeWeeks model * toFloat (workWeekHours model.workingConditions)) - totalComponentTimeReduction model
+  in
+    if res < 0 then 0 else res
 
 totalTimeDays : Model -> Float
 totalTimeDays model = totalTimeHours model / 8
@@ -75,29 +80,33 @@ commonOrUncommon model = (model.itemRarity == ItemRarityCommon) || (model.itemRa
 applyMagicItemAdept : Model -> Bool
 applyMagicItemAdept model = commonOrUncommon model.itemEnchantment && model.workingConditions.magicItemAdept
 
--- componentTimeReductionHours : MagicComponent -> Float
--- componentTimeReductionHours mc =
---   case mc.componentType of
---     ComponentItemRarityNone       -> 0
---     ComponentItemRarityCommon     -> 9
---     ComponentItemRarityUncommon   -> 18
---     ComponentItemRarityRare       -> 3 * 56
---     ComponentItemRarityVeryRare   -> 8 * 56
---     ComponentItemRarityLegendary  -> 10 * 56
+componentTimeReductionHours : MagicComponent -> Float
+componentTimeReductionHours mc =
+  case mc.componentType of
+    ComponentItemRarityNone       -> 0
+    ComponentItemRarityCommon     -> 9
+    ComponentItemRarityUncommon   -> 18
+    ComponentItemRarityRare       -> 3 * 56
+    ComponentItemRarityVeryRare   -> 8 * 56
+    ComponentItemRarityLegendary  -> 10 * 56
       
--- alignmentMultiplier : MagicComponent -> Float
--- alignmentMultiplier mc =
---   case mc.alignment of
---     ComponentAlignmentNone      -> 1.0
---     ComponentAlignmentThematic  -> 1.3
---     ComponentAlignmentMagical   -> 1.4
---     ComponentAlignmentElemental -> 1.5
---     ComponentAlignmentDraconic  -> 1.7
---     ComponentAlignmentDivine    -> 1.9
---     ComponentAlignmentUnique    -> 4.0
+alignmentMultiplier : MagicComponent -> Float
+alignmentMultiplier mc =
+  case mc.alignment of
+    ComponentAlignmentNone      -> 1.0
+    ComponentAlignmentThematic  -> 1.3
+    ComponentAlignmentMagical   -> 1.4
+    ComponentAlignmentElemental -> 1.5
+    ComponentAlignmentDraconic  -> 1.7
+    ComponentAlignmentDivine    -> 1.9
+    ComponentAlignmentUnique    -> 4.0
 
--- componentHourReduction : MagicComponent -> Float
--- componentHourReduction mc = componentTimeReductionHours mc * alignmentMultiplier mc
+componentHourReduction : MagicComponent -> Float
+componentHourReduction mc = componentTimeReductionHours mc * alignmentMultiplier mc
+
+totalComponentTimeReduction : Model -> Float
+totalComponentTimeReduction model =
+  List.sum (List.map (\l -> componentHourReduction ((compose itemEnchantmentL l).get model)) [component1L, component2L, component3L, component4L, component5L])
 
 -- magicComponentTotal : ItemEnchantment -> Float
 -- magicComponentTotal model =

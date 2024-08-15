@@ -163,3 +163,12 @@ tr.shaded:nth-child(even)
   font-weight: bold;
   padding-top: 10px;
 }
+
+table.components > tr > th {
+  width: 25%;
+}
+
+table.components > tr > td {
+  width: 25%;
+  text-align: center;
+}

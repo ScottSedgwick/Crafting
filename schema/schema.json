@@ -5,7 +5,7 @@
             "objectName": "Model",
             "properties": [
                 {
-                    "initValue": "TabNameBaseItemConstruction",
+                    "initValue": "tabName.def",
                     "propName": "currentTab",
                     "propType": "TabName",
                     "stringLens": true
@@ -344,7 +344,7 @@
         },
         {
             "converter": true,
-            "def": "Base Item Construction",
+            "def": "Base Item Improvement",
             "enumName": "TabName",
             "values": [
                 "Base Item Construction",

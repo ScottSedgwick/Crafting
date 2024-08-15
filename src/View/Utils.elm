@@ -4,8 +4,11 @@ import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Monocle.Lens exposing (..)
+import Round
 
 import Model exposing (..)
+import Model.Shared exposing (..)
+import Model.WorkingConditions exposing (..)
 import StrConv exposing (..)
 import Utils exposing (..)
 
@@ -62,3 +65,31 @@ sectionHeader title subscript =
   [ span [ class "section-header" ] [ text (title ++ " ") ]
   , span [ class "section-subscript" ] [ text subscript ]
   ]
+
+assistantCostTable : Float -> Model -> Html Msg
+assistantCostTable timeWeeks model =
+  table [ class "cost-table" ]
+  [ tr [] 
+    [ th [ class "cost-table" ] [ text "Assistant #" ]
+    , th [ class "cost-table" ] [ text "Cost (gp per §)" ]
+    , th [ class "cost-table" ] [ text "Total Cost (gp)" ]
+    ]
+  , assistantCost timeWeeks model "1" assistant1L
+  , assistantCost timeWeeks model "2" assistant2L
+  , assistantCost timeWeeks model "3" assistant3L
+  , assistantCost timeWeeks model "4" assistant4L
+  , assistantCost timeWeeks model "5" assistant5L
+  ]
+
+assistantCost : Float -> Model -> String -> Lens WorkingConditions AssistantType -> Html Msg
+assistantCost timeWeeks model num lens =
+  let
+    asstType = (compose workingConditionsL lens).get model
+    c = assistantInput asstType
+    tc = assistantTotalCost timeWeeks model.workingConditions asstType
+  in
+    tr [] 
+    [ td [ class "cost-table" ] [ text num ]
+    , td [ class "cost-table" ] [ text (String.fromInt c) ]
+    , td [ class "cost-table" ] [ text (Round.round 2 tc) ]
+    ]

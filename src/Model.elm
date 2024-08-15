@@ -17,7 +17,7 @@ type alias Model =
 
 initModel : Model
 initModel =
-  { currentTab = TabNameBaseItemConstruction
+  { currentTab = tabName.def
   , workingConditions = initWorkingConditions
   , baseItemConstruction = initBaseItemConstruction
   , baseItemImprovement = initBaseItemImprovement
@@ -449,7 +449,7 @@ tabName =
         TabNameSentientItems -> "Sentient Items"
         TabNameArtifacts -> "Artifacts"
     all = [TabNameBaseItemConstruction, TabNameBaseItemImprovement, TabNameItemEnchantment, TabNameItemBonusImprovement, TabNameItemAbilityImprovement, TabNameNewItemResearch, TabNameSentientItems, TabNameArtifacts]
-    def = TabNameBaseItemConstruction
+    def = TabNameBaseItemImprovement
   in
     { toStr = to
     , def = def

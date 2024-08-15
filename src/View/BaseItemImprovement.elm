@@ -27,6 +27,7 @@ view model =
     , timeSection model
     , hr [] []
     , div [ class "section-header" ] [ text "Calculating Cost" ]
+    , assistantCostTable (timeToCompletionHours model) model
     , costSection model
     ]
 

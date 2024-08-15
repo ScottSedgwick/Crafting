@@ -70,18 +70,7 @@ sectionCost model =
         , td [] [ span [ class "info" ] [ text "(Multiply Weekly Rate by total Workweeks):" ] ]
         ]
       ]
-    , table [ class "cost-table" ]
-      [ tr [] 
-        [ th [ class "cost-table" ] [ text "Assistant #" ]
-        , th [ class "cost-table" ] [ text "Cost (gp per §)" ]
-        , th [ class "cost-table" ] [ text "Total Cost (gp)" ]
-        ]
-      , assistantCost model "1" assistant1L
-      , assistantCost model "2" assistant2L
-      , assistantCost model "3" assistant3L
-      , assistantCost model "4" assistant4L
-      , assistantCost model "5" assistant5L
-      ]
+    , assistantCostTable (baseMaterialCost (baseItemConstructionL.get model)) model
     , table []
       [ tr []
         [ td [] [ span [ class "label" ] [ text ("Crafting Assistance Cost Total: " ++ String.fromInt cact ++ " gp") ]]
@@ -116,17 +105,4 @@ sectionCost model =
           , td [] [ span [ class "info" ] [ text "(Add Base Materials Costs, Crafting Assistance Cost Total, Additional Crafting Assistance Cost, and Miscellaneous Additional Cost.)" ] ]
           ]
       ]
-    ]
-
-assistantCost : Model -> String -> Lens WorkingConditions AssistantType -> Html Msg
-assistantCost model num lens =
-  let
-    t = (compose workingConditionsL lens).get model
-    c = assistantInput t
-    tc = assistantTotalCost model.workingConditions t
-  in
-    tr [] 
-    [ td [ class "cost-table" ] [ text num ]
-    , td [ class "cost-table" ] [ text (String.fromInt c) ]
-    , td [ class "cost-table" ] [ text (Round.round 2 tc) ]
     ]

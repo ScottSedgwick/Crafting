@@ -45,20 +45,13 @@ assistantCost asstType weeks = (toFloat (assistantInput asstType)) * weeks
 assistantCostTotal : Float -> WorkingConditions -> Float
 assistantCostTotal weeks model = List.sum (List.map (\x -> assistantCost (x.get model) weeks) [assistant1L, assistant2L, assistant3L, assistant4L, assistant5L])
 
-assistantTotalCost : WorkingConditions -> AssistantType -> Float
-assistantTotalCost model t =
+assistantTotalCost : Float -> WorkingConditions -> AssistantType -> Float
+assistantTotalCost timeWeeks model t =
   let
-    c = assistantInput t
-    cet = environmentTotal model
-    wwh = cet + 56
-    cin = crafterInput (crafterTypeL.get model)
-    cat = assistanceTotal model
-    stt = toolTotal model
-    tci = stt + toFloat cat + toFloat cin
-    tww = toFloat wwh / tci
-    tc = toFloat c / tww
-  in 
-    tc
+    costPerWeek = assistantInput t
+    totalWorkWeeks = timeWeeks * 56 / toFloat (workWeekHours model)
+  in
+    toFloat costPerWeek * totalWorkWeeks
 
 envAttunementMod : WorkingConditions -> Int
 envAttunementMod wc = if (environmentAttunedL.get wc) then -5 else 0

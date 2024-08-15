@@ -15,85 +15,26 @@ import View.Utils exposing (..)
 
 view : Model -> Html Msg
 view model = 
-  let 
-    irl = compose itemEnchantmentL itemRarityL
-    ct  = compose workingConditionsL crafterTypeL
-    mas = compose itemEnchantmentL mimicASpellL
-    nos = compose itemEnchantmentL numberOfDifferentSpellsL
-    rmi = compose itemEnchantmentL replicateMagicItemL
-  in
     div []
       [ hr [] []
       , div [ class "section-header" ] [ text "Item Enchantment" ]
-      , table [] 
-        [ tr [] 
-          [ td [] [ span [ class "label" ] [ text "Item Rarity (choose one):" ] ]
-          , td [] [ mkSelect model itemRarity irl ]
-          ]
-        , tr [] 
-          [ td [] [ span [ class "label" ] [ text "Base Enchantment Cost (gp):" ] ]
-          , td [] [ span [ class "label" ] [ text (Round.round 2 (baseEnchantmentCost model)) ] ] 
-          ]
-        , tr [] 
-          [ td [] [ span [ class "label" ] [ text "Base Enchantment Time (§):" ] ]
-          , td [] [ span [ class "label" ] [ text (Round.round 2 (baseEnchantmentTimeWeeks model)) ] ] 
-          ]
-        ]
+      , itemEnchantmentSection model
       
       , hr [] []
       , div [ class "section-header" ] [ text "Questions" ]
-      , table [] 
-        [ tr [] 
-          [ td [ class "label" ] [ text "Is the item being enchanted Common or Uncommon?" ]
-          , td [ class "label" ] [ text (if commonOrUncommon model.itemEnchantment then "Yes" else "No") ]
-          ]
-        , tr [] [ td [ class "info", colspan 2 ] [ text "(If the crafter is a magic item adept, and the item is Uncommon or Common, divide the Base Enchantment Cost by 2 and the Base Enchantment Time by 4. Use these totals for the rest of the worksheet before applying any other modifiers)" ] ]
+      , questionsSection model
 
-        , tr [] 
-          [ td [ class "label" ] [ text "Is the item being created a scroll, potion or one-use item?" ]
-          , td [] [ check model (compose itemEnchantmentL oneUseItemL) ]
-          ]
-        , tr [] [ td [ class "info", colspan 2 ] [ text "(If the item is single use, divide the Base Enchantment Cost and Base Enchantment Time by 2)" ] ]
+      , hr [] []
+      , div [ class "section-header" ] [ text "Components:" ]
+      , componentsSection model
 
-        , tr [] 
-          [ td [ class "label" ] [ text "Does the item being enchanted cast or mimic a spell (e.g. magic missile, etc.)? Does the crafter have access to this spell? How many times per workweek is the spell cast?" ]
-          , td [] [ mkSelect model mimicASpell mas ]
-          ]
-        , tr [] 
-          [ td [ class "label" ] [ text "How many separate spells are being cast in the way described above?" ]
-          , td [] [ mkInput model intStrConv nos ]
-          ]
-        , tr [] [ td [ class "info", colspan 2 ] [ text "If the answer to either or both Questions 4 and 5 is no, there is no change. If the answer to Questions 4 and 5 are both yes, multiply the answer from Question 6 by the answer to Question 7. Subtract the result from 56. Then, take that number and multiply it by the Base Enchantment Time (§). Use the resulting answer to replace the current Base Enchantment Time (hours) above." ] ]
-
-        , tr [] 
-          [ td [ class "label" ] [ text "Does the crafter have access to a magic item identical to the item being crafted?" ]
-          , td [] [ check model (compose itemEnchantmentL accessToIdenticalItemL) ]
-          ]
-        , tr [] [ td [ class "info", colspan 2 ] [ text "If the answer is yes to Question 8, reduce the Base Enchantment Cost by 10%." ] ]
-
-        , tr [] 
-          [ td [ class "label" ] [ text "Does the item being created appear on the Replicate Magic Item infusion list?" ]
-          , td [] [ mkSelect model replicateMagicItem rmi ]
-          ]
-        ]
       , hr [] []
       , div [ class "section-header" ] [ text "Calculating Time:" ]
-      , table [] 
-        [ tr [] 
-          [ td [ class "label" ] [ text "Total Time (hours): " ]
-          , td [ class "label" ] [ text (Round.round 2 (totalTimeHours model)) ]
-          ]
-        , tr [] 
-          [ td [ class "label" ] [ text "Total Time (days): " ]
-          , td [ class "label" ] [ text (Round.round 2 (totalTimeDays model)) ]
-          ]
-        , tr [] 
-          [ td [ class "label" ] [ text "Total Time (weeks): " ]
-          , td [ class "label" ] [ text (Round.round 2 (totalTimeWeeks model)) ]
-          ]
-        ]
+      , timeSection model 
+
       , hr [] []
       , div [ class "section-header" ] [ text "Calculating Cost:" ]
+      , assistantCostTable (totalTimeWeeks model) model
       , table [] 
         [ tr [] 
           [ td [ class "label" ] [ text "Assistant Cost:" ]
@@ -106,15 +47,123 @@ view model =
         ]
       ]
 
-assistant : Model -> String -> Lens Model AssistantType -> Html Msg
-assistant model num lens =
-  tr [] 
-  [ td [] 
-    [ span [ class "label" ] [ text ("Assistant " ++ num ++ ": ") ]
-    , span [ class "info" ] [ text ("Input (gp): " ++ String.fromInt (assistantInput (lens.get model)) ) ]
+itemEnchantmentSection : Model -> Html Msg
+itemEnchantmentSection model =
+  let
+    irl = compose itemEnchantmentL itemRarityL
+  in
+    table [] 
+    [ tr [] 
+      [ td [] [ span [ class "label" ] [ text "Item Rarity (choose one):" ] ]
+      , td [] [ mkSelect model itemRarity irl ]
+      ]
+    , tr [] 
+      [ td [] [ span [ class "label" ] [ text "Base Enchantment Cost (gp):" ] ]
+      , td [] [ span [ class "label" ] [ text (Round.round 2 (baseEnchantmentCost model)) ] ] 
+      ]
+    , tr [] 
+      [ td [] [ span [ class "label" ] [ text "Base Enchantment Time (§):" ] ]
+      , td [] [ span [ class "label" ] [ text (Round.round 2 (baseEnchantmentTimeWeeks model)) ] ] 
+      ]
     ]
-  , td [] [ mkSelect model assistantType lens ] 
+
+questionsSection : Model -> Html Msg
+questionsSection model =
+  let
+    mas = compose itemEnchantmentL mimicASpellL
+    nos = compose itemEnchantmentL numberOfDifferentSpellsL
+    rmi = compose itemEnchantmentL replicateMagicItemL
+  in
+    table [] 
+    [ tr [] 
+      [ td [ class "label" ] [ text "Is the item being enchanted Common or Uncommon?" ]
+      , td [ class "label" ] [ text (if commonOrUncommon model.itemEnchantment then "Yes" else "No") ]
+      ]
+    , tr [] [ td [ class "info", colspan 2 ] [ text "(If the crafter is a magic item adept, and the item is Uncommon or Common, divide the Base Enchantment Cost by 2 and the Base Enchantment Time by 4. Use these totals for the rest of the worksheet before applying any other modifiers)" ] ]
+
+    , tr [] 
+      [ td [ class "label" ] [ text "Is the item being created a scroll, potion or one-use item?" ]
+      , td [] [ check model (compose itemEnchantmentL oneUseItemL) ]
+      ]
+    , tr [] [ td [ class "info", colspan 2 ] [ text "(If the item is single use, divide the Base Enchantment Cost and Base Enchantment Time by 2)" ] ]
+
+    , tr [] 
+      [ td [ class "label" ] [ text "Does the item being enchanted cast or mimic a spell (e.g. magic missile, etc.)? Does the crafter have access to this spell? How many times per workweek is the spell cast?" ]
+      , td [] [ mkSelect model mimicASpell mas ]
+      ]
+    , tr [] 
+      [ td [ class "label" ] [ text "How many separate spells are being cast in the way described above?" ]
+      , td [] [ mkInput model intStrConv nos ]
+      ]
+    , tr [] [ td [ class "info", colspan 2 ] [ text "If the answer to either or both Questions 4 and 5 is no, there is no change. If the answer to Questions 4 and 5 are both yes, multiply the answer from Question 6 by the answer to Question 7. Subtract the result from 56. Then, take that number and multiply it by the Base Enchantment Time (§). Use the resulting answer to replace the current Base Enchantment Time (hours) above." ] ]
+
+    , tr [] 
+      [ td [ class "label" ] [ text "Does the crafter have access to a magic item identical to the item being crafted?" ]
+      , td [] [ check model (compose itemEnchantmentL accessToIdenticalItemL) ]
+      ]
+    , tr [] [ td [ class "info", colspan 2 ] [ text "If the answer is yes to Question 8, reduce the Base Enchantment Cost by 10%." ] ]
+
+    , tr [] 
+      [ td [ class "label" ] [ text "Does the item being created appear on the Replicate Magic Item infusion list?" ]
+      , td [] [ mkSelect model replicateMagicItem rmi ]
+      ]
+    ]
+
+timeSection : Model -> Html Msg
+timeSection model = 
+  table [] 
+  [ tr [] 
+    [ td [ class "label" ] [ text "Total Time (hours): " ]
+    , td [ class "label" ] [ text (Round.round 2 (totalTimeHours model)) ]
+    ]
+  , tr [] 
+    [ td [ class "label" ] [ text "Total Time (days): " ]
+    , td [ class "label" ] [ text (Round.round 2 (totalTimeDays model)) ]
+    ]
+  , tr [] 
+    [ td [ class "label" ] [ text "Total Time (weeks): " ]
+    , td [ class "label" ] [ text (Round.round 2 (totalTimeWeeks model)) ]
+    ]
   ]
+
+componentsSection : Model -> Html Msg
+componentsSection model = 
+  table [ class "components" ]
+  ( tr []
+    [ th [] [ text "Component #" ]
+    , th [] [ text "Rarity" ]
+    , th [] [ text "Alignment" ]
+    , th [] [ text "Time Reduction" ]
+    ] ::
+    ( List.map (mkComponent model) [("1", component1L), ("2", component2L), ("3", component3L), ("4", component4L), ("5", component5L)] ) ++
+    [ td [ class "label", colspan 3 ] [ text ("Total Component Time Reduction (hours): ") ]
+    , td [ class "label", style "text-align" "center" ] [ text (Round.round 2 (totalComponentTimeReduction model))]
+    ]
+  )
+
+mkComponent : Model -> (String, Lens ItemEnchantment MagicComponent) -> Html Msg
+mkComponent model (num, l) = 
+  let
+    lens = compose itemEnchantmentL l
+    rl = compose lens componentTypeL
+    al = compose lens alignmentL
+  in
+    tr []
+    [ td [ class "label" ] [ text num ]
+    , td [] [ mkSelect model componentItemRarity rl ]
+    , td [] [ mkSelect model componentAlignment al ]
+    , td [ class "info" ] [ text (Round.round 2 (componentHourReduction (lens.get model)) ++ " hours.")]
+    ]
+
+-- assistant : Model -> String -> Lens Model AssistantType -> Html Msg
+-- assistant model num lens =
+--   tr [] 
+--   [ td [] 
+--     [ span [ class "label" ] [ text ("Assistant " ++ num ++ ": ") ]
+--     , span [ class "info" ] [ text ("Input (gp): " ++ String.fromInt (assistantInput (lens.get model)) ) ]
+--     ]
+--   , td [] [ mkSelect model assistantType lens ] 
+--   ]
 
 -- -------------------------------------------------------------------------------
 -- -- rightPane
