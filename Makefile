@@ -12,3 +12,6 @@ build: clean copy_assets model
 
 model:
 	datagen --input schema/schema.json --output src/Model.elm
+
+test:
+	elm-test

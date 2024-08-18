@@ -71,7 +71,7 @@ assistantCostTable timeWeeks model =
   table [ class "cost-table" ]
   [ tr [] 
     [ th [ class "cost-table" ] [ text "Assistant #" ]
-    , th [ class "cost-table" ] [ text "Cost (gp per §)" ]
+    , th [ class "cost-table" ] [ text "Cost (gp per week)" ]
     , th [ class "cost-table" ] [ text "Total Cost (gp)" ]
     ]
   , assistantCost timeWeeks model "1" assistant1L
@@ -86,7 +86,7 @@ assistantCost timeWeeks model num lens =
   let
     asstType = (compose workingConditionsL lens).get model
     c = assistantInput asstType
-    tc = assistantTotalCost timeWeeks model.workingConditions asstType
+    tc = assistantTotalCost timeWeeks asstType
   in
     tr [] 
     [ td [ class "cost-table" ] [ text num ]

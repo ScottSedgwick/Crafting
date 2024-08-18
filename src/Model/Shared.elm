@@ -1,4 +1,7 @@
-module Model.Shared exposing (..)
+module Model.Shared exposing 
+  ( tabId
+  , tabIndex
+  )
 
 import Utils exposing (..)
 import Model exposing (..)
@@ -26,22 +29,3 @@ tabIndex t =
     TabNameNewItemResearch        -> 6
     TabNameSentientItems          -> 7
     TabNameArtifacts              -> 8
-
-crafterInput : CrafterType -> Int
-crafterInput c =
-  case c of
-    CrafterTypePlayerCharacter        -> 25
-    CrafterTypeArtificerNotSpeciality -> 50
-    CrafterTypeArtificerSpeciality    -> 100
-      
-assistantInput : AssistantType -> Int
-assistantInput a = 
-  case a of
-    AssistantTypeNone                   -> 0
-    AssistantTypeNotProficient          -> 5
-    AssistantTypeHalfProficient         -> 7
-    AssistantTypeProficient             -> 15
-    AssistantTypePlayerCharacter        -> 25
-    AssistantTypeExpertise              -> 30
-    AssistantTypeArtificerNotSpeciality -> 50
-    AssistantTypeArtificerSpeciality    -> 100

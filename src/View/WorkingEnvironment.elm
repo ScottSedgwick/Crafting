@@ -61,7 +61,7 @@ sectionCraftingAssistance model =
   , div [] 
     [ span [ class "section-header" ] [ text ("Crafting Assistance: ") ]
     , span [ class "section-subscript" ] [ text "(Fill in the Crafting Input for each Assistant)" ]
-    , span [ class "section-total" ] [ text ("Crafting Assistance Total: " ++ String.fromInt (assistanceTotal model.workingConditions) ++ " gp") ]
+    , span [ class "section-total" ] [ text ("Crafting Assistance Total: " ++ String.fromInt (assistanceInputPerWeekTotal model.workingConditions) ++ " gp") ]
     ]
   , table [ style "width" "100%" ]
     [ sectionAssistant model "1" assistant1L

@@ -53,11 +53,9 @@ sectionBaseItemPrice model =
 sectionCost : Model -> Html Msg
 sectionCost model =
   let
-    cact = assistanceTotal model.workingConditions
-    lacac = compose baseItemConstructionL additionalCraftingAssistanceCostL
-    slacac = toStrLens intStrConv lacac
-    lmac = compose baseItemConstructionL miscAdditionalCostL
-    slmac = toStrLens intStrConv lmac
+    craftingAssistanceTotal = allAssistantsCostTotal totalWW model.workingConditions
+    additionalCraftingCostL = toStrLens intStrConv (compose baseItemConstructionL additionalCraftingAssistanceCostL)
+    additionalMistCostL = toStrLens intStrConv (compose baseItemConstructionL miscAdditionalCostL)
     totalWW = totalWorkWeeks model
     totalCs = totalCosts model
   in
@@ -67,13 +65,13 @@ sectionCost model =
     , table []
       [ tr []
         [ td [] [ span [ class "label" ] [ text "Crafting Assistance Costs" ]]
-        , td [] [ span [ class "info" ] [ text "(Multiply Weekly Rate by total Workweeks):" ] ]
+        , td [] [ span [ class "info" ] [ text ("(Multiply Weekly Rate by total Workweeks): " ++ Round.round 2 (totalWorkWeeks model)) ] ]
         ]
       ]
-    , assistantCostTable (baseMaterialCost (baseItemConstructionL.get model)) model
+    , assistantCostTable (totalWorkWeeks model) model
     , table []
       [ tr []
-        [ td [] [ span [ class "label" ] [ text ("Crafting Assistance Cost Total: " ++ String.fromInt cact ++ " gp") ]]
+        [ td [] [ span [ class "label" ] [ text ("Crafting Assistance Cost Total: " ++ Round.round 2 craftingAssistanceTotal ++ " gp") ]]
         , td [] [ span [ class "info" ] [ text "(Sum of all Crafting Assistant Costs Totals)" ] ]
         ]
       , tr []
@@ -82,7 +80,7 @@ sectionCost model =
           , br [] []
           , span [ class "info" ] [ text "(Determined by the DM)" ]
           ]
-        , td [] [ input [ type_ "text", placeholder "Additional Assistance Cost", value (slacac.get model), onInput (UpdateStr slacac) ] [] ]
+        , td [] [ input [ type_ "text", placeholder "Additional Assistance Cost", value (additionalCraftingCostL.get model), onInput (UpdateStr additionalCraftingCostL) ] [] ]
         ]
       , tr []
         [ td [] 
@@ -90,7 +88,7 @@ sectionCost model =
           , br [] []
           , span [ class "info" ] [ text "(Determined by the DM)" ]
           ]
-        , td [] [ input [ type_ "text", placeholder "Miscellaneous Additional Cost", value (slmac.get model), onInput (UpdateStr slmac) ] [] ]
+        , td [] [ input [ type_ "text", placeholder "Miscellaneous Additional Cost", value (additionalMistCostL.get model), onInput (UpdateStr additionalMistCostL) ] [] ]
         ]
       ]
     , hr [] []

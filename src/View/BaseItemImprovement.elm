@@ -27,7 +27,7 @@ view model =
     , timeSection model
     , hr [] []
     , div [ class "section-header" ] [ text "Calculating Cost" ]
-    , assistantCostTable (timeToCompletionHours model) model
+    , assistantCostTable (timeToCompletionWeeks model) model
     , costSection model
     ]
 
@@ -137,7 +137,7 @@ costSection : Model -> Html Msg
 costSection model =
   let
     hours = timeToCompletionHours model
-    apw = assistanceTotal model.workingConditions
+    apw = assistanceInputPerWeekTotal model.workingConditions
     acost = (toFloat apw / 56) * hours
   in
     table [] 

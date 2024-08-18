@@ -85,7 +85,7 @@ timeToCompletionHours model =
 craftingBonuses : Model -> String
 craftingBonuses model =
   let
-    help = if assistanceTotal model.workingConditions > 0 then "Advantage on roll due to assistants. " else ""
+    help = if assistanceInputPerWeekTotal model.workingConditions > 0 then "Advantage on roll due to assistants. " else ""
     tqb = allToolsQualityBonuses model.workingConditions
     quality = if tqb /= 0 then (sign tqb ++ " to roll for tool quality bonuses. ") else ""
     tmb = allToolsMagicBonuses model.workingConditions

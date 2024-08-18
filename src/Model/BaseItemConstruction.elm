@@ -18,7 +18,7 @@ totalHours model =
     cet = environmentTotal model.workingConditions
     wwh = cet + 56
     cin = crafterInput (crafterTypeL.get model.workingConditions)
-    cat = assistanceTotal model.workingConditions
+    cat = assistanceInputPerWeekTotal model.workingConditions
     stt = toolTotal model.workingConditions
     tci = stt + toFloat cat + toFloat cin
     bip = baseItemPriceL.get model.baseItemConstruction
@@ -31,7 +31,8 @@ totalCosts : Model -> Float
 totalCosts model =
   let
     bmc = baseMaterialCost model.baseItemConstruction
-    cact = assistantCostTotal 0 model.workingConditions
+    totalWW = totalWorkWeeks model
+    cact = allAssistantsCostTotal totalWW model.workingConditions
     acac = additionalCraftingAssistanceCostL.get model.baseItemConstruction
     mac = miscAdditionalCostL.get model.baseItemConstruction
   in

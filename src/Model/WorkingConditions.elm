@@ -1,9 +1,66 @@
-module Model.WorkingConditions exposing (..)
+module Model.WorkingConditions exposing 
+  ( assistantInput
+  , assistanceInputPerWeekTotal
+  , assistantTotalCost
+  , allAssistantsCostTotal
+  , allToolsMagicBonuses
+  , allToolsQualityBonuses
+  , crafterInput
+  , craftingEnvironmentModifier
+  , environmentTotal
+  , envAttunementMod
+  , envSanctificationMod
+  , mCrafterInput
+  , toolInput
+  , toolTotal
+  , totalCrafterInput
+  , workWeekHours
+  )
 
 import Model exposing (..)
 import Monocle.Lens exposing (..)
 import Model.Shared exposing (..)
 
+-------------------------------------------------------------------------------
+-- Assistant calculations
+-------------------------------------------------------------------------------  
+assistantInput : AssistantType -> Int
+assistantInput a = 
+  case a of
+    AssistantTypeNone                   -> 0
+    AssistantTypeNotProficient          -> 5
+    AssistantTypeHalfProficient         -> 7
+    AssistantTypeProficient             -> 15
+    AssistantTypePlayerCharacter        -> 25
+    AssistantTypeExpertise              -> 30
+    AssistantTypeArtificerNotSpeciality -> 50
+    AssistantTypeArtificerSpeciality    -> 100
+
+assistanceInputPerWeekTotal : WorkingConditions -> Int
+assistanceInputPerWeekTotal model = List.sum (List.map (\l -> assistantInput (l.get model)) [assistant1L, assistant2L, assistant3L, assistant4L, assistant5L])
+
+assistantCost : AssistantType -> Float -> Float
+assistantCost asstType weeks = (toFloat (assistantInput asstType)) * weeks
+
+allAssistantsCostTotal : Float -> WorkingConditions -> Float
+allAssistantsCostTotal weeks model = List.sum (List.map (\x -> assistantCost (x.get model) weeks) [assistant1L, assistant2L, assistant3L, assistant4L, assistant5L])
+
+assistantTotalCost : Float -> AssistantType -> Float
+assistantTotalCost timeWeeks t =
+  let
+    costPerWeek = assistantInput t
+  in
+    toFloat costPerWeek * timeWeeks
+
+-------------------------------------------------------------------------------
+-- Crafting input calculations
+-------------------------------------------------------------------------------
+crafterInput : CrafterType -> Int
+crafterInput c =
+  case c of
+    CrafterTypePlayerCharacter        -> 25
+    CrafterTypeArtificerNotSpeciality -> 50
+    CrafterTypeArtificerSpeciality    -> 100
 
 craftingEnvironmentModifier : CraftingEnvironment -> Int
 craftingEnvironmentModifier e =
@@ -15,16 +72,22 @@ craftingEnvironmentModifier e =
     CraftingEnvironmentExpert     -> -15
     CraftingEnvironmentApex       -> -20
 
+mCrafterInput : Model -> Int
+mCrafterInput model = crafterInput ((compose workingConditionsL crafterTypeL).get model)
+
 totalCrafterInput : Model -> Float
 totalCrafterInput model =
   let
     cin = mCrafterInput model
-    cat = assistanceTotal (workingConditionsL.get model)
+    cat = assistanceInputPerWeekTotal (workingConditionsL.get model)
     stt = toolTotal (workingConditionsL.get model)
     tci = stt + toFloat cat + toFloat cin
   in
     tci
 
+-------------------------------------------------------------------------------
+-- Sanctification bonus calculations
+-------------------------------------------------------------------------------
 envSanctificationMod : WorkingConditions -> Int
 envSanctificationMod model = 
   case (environmentSanctificationL.get model) of
@@ -32,27 +95,9 @@ envSanctificationMod model =
     SanctificationBasic   -> -5
     SanctificationThemed  -> -15
 
-
-mCrafterInput : Model -> Int
-mCrafterInput model = crafterInput ((compose workingConditionsL crafterTypeL).get model)
-
-assistanceTotal : WorkingConditions -> Int
-assistanceTotal model = List.sum (List.map (\l -> assistantInput (l.get model)) [assistant1L, assistant2L, assistant3L, assistant4L, assistant5L])
-
-assistantCost : AssistantType -> Float -> Float
-assistantCost asstType weeks = (toFloat (assistantInput asstType)) * weeks
-
-assistantCostTotal : Float -> WorkingConditions -> Float
-assistantCostTotal weeks model = List.sum (List.map (\x -> assistantCost (x.get model) weeks) [assistant1L, assistant2L, assistant3L, assistant4L, assistant5L])
-
-assistantTotalCost : Float -> WorkingConditions -> AssistantType -> Float
-assistantTotalCost timeWeeks model t =
-  let
-    costPerWeek = assistantInput t
-    totalWorkWeeks = timeWeeks * 56 / toFloat (workWeekHours model)
-  in
-    toFloat costPerWeek * totalWorkWeeks
-
+-------------------------------------------------------------------------------
+-- Environment quality calculations
+-------------------------------------------------------------------------------
 envAttunementMod : WorkingConditions -> Int
 envAttunementMod wc = if (environmentAttunedL.get wc) then -5 else 0
 
@@ -65,6 +110,15 @@ environmentTotal model =
   in
     cenv + eam + esm
 
+-------------------------------------------------------------------------------
+-- Hours in a work week calculations
+-------------------------------------------------------------------------------
+workWeekHours : WorkingConditions -> Int
+workWeekHours model = environmentTotal model + 56
+
+-------------------------------------------------------------------------------
+-- Tool input calculations
+-------------------------------------------------------------------------------
 toolInput : WorkingConditions -> Lens WorkingConditions Tool -> Float
 toolInput model lens =
   let
@@ -87,12 +141,6 @@ toolInput model lens =
   in
     if (sact == 0) then 0 else sact + toFloat magBonus
 
-toolTotal : WorkingConditions -> Float
-toolTotal model = List.sum (List.map (toolInput model) [tool1L, tool2L, tool3L, tool4L, tool5L])
-
-workWeekHours : WorkingConditions -> Int
-workWeekHours model = environmentTotal model + 56
-
 magicInput : MagicBonus -> Int
 magicInput b =
   case b of
@@ -100,6 +148,9 @@ magicInput b =
     MagicBonusPlus1 -> 1
     MagicBonusPlus2 -> 2
     MagicBonusPlus3 -> 3
+
+toolTotal : WorkingConditions -> Float
+toolTotal model = List.sum (List.map (toolInput model) [tool1L, tool2L, tool3L, tool4L, tool5L])
 
 allToolsQualityBonuses : WorkingConditions -> Int
 allToolsQualityBonuses model = List.sum (List.map (\x -> qualityInput x.toolType) [model.tool1, model.tool2, model.tool3, model.tool4, model.tool5])
