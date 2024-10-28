@@ -1,6 +1,7 @@
 module Model.ItemEnchantment exposing (..)
 
 import Model exposing (..)
+import Model.Shared exposing (mimicMult)
 import Model.WorkingConditions exposing (..)
 import Monocle.Lens exposing (..)
 
@@ -37,9 +38,24 @@ baseEnchantmentTimeWeeks model =
 totalTimeHours : Model -> Float
 totalTimeHours model = 
   let
-    res = (baseEnchantmentTimeWeeks model * toFloat (workWeekHours model.workingConditions)) - totalComponentTimeReduction model
+    res = (baseEnchantmentTimeWeeks model * toFloat (workWeekHours model.workingConditions) * spellCastMultiplier model) - totalComponentTimeReduction model
   in
     if res < 0 then 0 else res
+
+spellCastMultiplier : Model -> Float
+spellCastMultiplier model =
+  let
+    mas : Int
+    mas = mimicMult ((compose itemEnchantmentL mimicASpellL).get model)
+    nos : Int
+    nos = (compose itemEnchantmentL numberOfDifferentSpellsL).get model
+    mul: Int
+    mul = 56 - mas * nos
+    rem : Int
+    rem = if mul < 0 then 0 else if mul > 56 then 56 else mul
+  in 
+    (toFloat rem) / 56.0
+    
 
 totalTimeDays : Model -> Float
 totalTimeDays model = totalTimeHours model / 8

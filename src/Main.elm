@@ -10,14 +10,14 @@ import Monocle.Lens exposing (..)
 import Utils exposing (..)
 
 init : flags -> (Model, Cmd Msg)
-init _ = ( initModel, Cmd.none )
+init _ = ( { initModel | currentTab = TabNameItemBonusImprovement }, Cmd.none )
 
 update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
   case msg of
     ChangeTab t         -> ( currentTabL.set t model, Cmd.none )
-    UpdateStr lens v    -> ( lens.set v model      , Cmd.none )
-    UpdateBool lens v   -> ( lens.set v model      , Cmd.none)
+    UpdateStr lens v    -> ( lens.set        v model, Cmd.none )
+    UpdateBool lens v   -> ( lens.set        v model, Cmd.none)
 
 subscriptions : Model -> Sub Msg
 subscriptions _ = Sub.none

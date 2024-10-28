@@ -344,7 +344,7 @@
         },
         {
             "converter": true,
-            "def": "Base Item Improvement",
+            "def": "Base Item Construction",
             "enumName": "TabName",
             "values": [
                 "Base Item Construction",

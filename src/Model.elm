@@ -449,7 +449,7 @@ tabName =
         TabNameSentientItems -> "Sentient Items"
         TabNameArtifacts -> "Artifacts"
     all = [TabNameBaseItemConstruction, TabNameBaseItemImprovement, TabNameItemEnchantment, TabNameItemBonusImprovement, TabNameItemAbilityImprovement, TabNameNewItemResearch, TabNameSentientItems, TabNameArtifacts]
-    def = TabNameBaseItemImprovement
+    def = TabNameBaseItemConstruction
   in
     { toStr = to
     , def = def

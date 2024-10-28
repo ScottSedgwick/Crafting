@@ -1,5 +1,8 @@
 module Model.Shared exposing 
-  ( tabId
+  ( baseEnchantmentCostByRarity
+  , baseEnchantmentTimeWeeksByRarity
+  , mimicMult
+  , tabId
   , tabIndex
   )
 
@@ -29,3 +32,34 @@ tabIndex t =
     TabNameNewItemResearch        -> 6
     TabNameSentientItems          -> 7
     TabNameArtifacts              -> 8
+
+baseEnchantmentCostByRarity : ItemRarity -> Int
+baseEnchantmentCostByRarity r =
+  case r of 
+    ItemRarityCommon    -> 50
+    ItemRarityUncommon  -> 200
+    ItemRarityRare      -> 2000
+    ItemRarityVeryRare  -> 20000
+    ItemRarityLegendary -> 100000
+
+baseEnchantmentTimeWeeksByRarity : ItemRarity -> Int
+baseEnchantmentTimeWeeksByRarity r =
+  case r of 
+    ItemRarityCommon    -> 1
+    ItemRarityUncommon  -> 2
+    ItemRarityRare      -> 10
+    ItemRarityVeryRare  -> 25
+    ItemRarityLegendary -> 50
+
+mimicMult : MimicASpell -> Int
+mimicMult m =
+  case m of
+    MimicASpellNo -> 0
+    MimicASpellYesbutcrafterhasnoaccesstoit -> 0
+    MimicASpellCast1timeaweek -> 1
+    MimicASpellCast2timesaweek -> 2
+    MimicASpellCast3timesaweek -> 3
+    MimicASpellCast4timesaweek -> 4
+    MimicASpellCast5timesaweek -> 5
+    MimicASpellCast6timesaweek -> 6
+    MimicASpellCast7timesaweek -> 7
