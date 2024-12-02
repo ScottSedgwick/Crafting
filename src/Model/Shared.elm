@@ -1,5 +1,6 @@
 module Model.Shared exposing 
   ( baseEnchantmentCostByRarity
+  , baseImprovementCostByRarity
   , baseEnchantmentTimeWeeksByRarity
   , mimicMult
   , tabId
@@ -41,6 +42,15 @@ baseEnchantmentCostByRarity r =
     ItemRarityRare      -> 2000
     ItemRarityVeryRare  -> 20000
     ItemRarityLegendary -> 100000
+
+baseImprovementCostByRarity : ItemRarity -> Int
+baseImprovementCostByRarity r =
+  case r of 
+    ItemRarityCommon    -> 100
+    ItemRarityUncommon  -> 200
+    ItemRarityRare      -> 1000
+    ItemRarityVeryRare  -> 2500
+    ItemRarityLegendary -> 5000
 
 baseEnchantmentTimeWeeksByRarity : ItemRarity -> Int
 baseEnchantmentTimeWeeksByRarity r =

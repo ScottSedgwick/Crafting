@@ -54,7 +54,7 @@ costSection : Model -> Html Msg
 costSection model = 
   let
     ur = upgradedRarity ((compose itemBonusImprovementL currentRarityL).get model)
-    baseCost = baseEnchantmentCostByRarity ur
+    baseCost = baseImprovementCostByRarity ur
     totalCost = totalImprovementCost model
   in
     table []
@@ -73,28 +73,21 @@ costSection model =
 timeSection : Model -> Html Msg
 timeSection model = 
   let
-    ur = upgradedRarity ((compose itemBonusImprovementL currentRarityL).get model)
-    baseTime = baseEnchantmentTimeWeeksByRarity ur
-    totalTimeWeeks = totalImprovementTimeWeeks model
+    baseTime = baseImprovementTime model
     totalTimeHours = totalImprovementTimeHours model 
     actualWeeks = totalTimeHours / 56
   in
     table []
     [ tr []
       [ td [class "label"] [ text "Base Enchantment Time (§):" ] 
-      , td [class "label"] [ text (String.fromInt baseTime)]
+      , td [class "label"] [ text (Round.round 2 baseTime)]
       ]
-    , tr [] [ td [ colspan 2, class "info"] [ text "(For the completed item rarity)" ] ]
-    , tr []
-      [ td [class "label"] [ text "Total Improvement Time (§):" ] 
-      , td [class "label"] [ text (Round.round 2 totalTimeWeeks)]
-      ]
-    , tr [] [ td [ colspan 2, class "info"] [ text "(Reduce the Base Enchantment Time by the Crafter Improvement Percentage)" ] ]
+    , tr [] [ td [ colspan 2, class "info"] [ text "(Total Enchantment Cost / Total Crafter Input)" ] ]
     , tr []
       [ td [class "label"] [ text "Total Improvement Time (hours):" ] 
       , td [class "label"] [ text (Round.round 2 totalTimeHours)]
       ]
-    , tr [] [ td [ colspan 2, class "info"] [ text "(Multiply Total Improvement Time (§) by the hours of a standard workweek)" ] ]
+    , tr [] [ td [ colspan 2, class "info"] [ text "(Multiply Base Enchantment Time (§) by the hours of a standard workweek)" ] ]
     , tr []
       [ td [class "label"] [ text "Actual Improvement Time (weeks):" ] 
       , td [class "label"] [ text (Round.round 2 actualWeeks)]

@@ -23,7 +23,7 @@ totalImprovementCost m =
   let
     newRarity = upgradedRarity m.itemBonusImprovement.currentRarity
     improvement = crafterImprovementPercentage m.workingConditions.crafterType
-    baseCost = baseEnchantmentCostByRarity newRarity
+    baseCost = baseImprovementCostByRarity newRarity
   in
     toFloat baseCost * (1 - improvement)
 
@@ -39,8 +39,10 @@ totalImprovementTimeWeeks m =
 totalImprovementTimeHours : Model -> Float
 totalImprovementTimeHours m =
   let
-    weeks = totalImprovementTimeWeeks m
+    weeks = baseImprovementTime m
     hoursPerWeek = toFloat (workWeekHours m.workingConditions)
   in
     weeks * hoursPerWeek
     
+baseImprovementTime : Model -> Float
+baseImprovementTime model = totalImprovementCost model / totalCrafterInput model
